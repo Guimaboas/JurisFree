@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sobre Nós | JurisFree</title>
+  <meta name="description" content="Conheça o JurisFree, projeto acadêmico da Faculdade Módulo (Cruzeiro do Sul): nossa história, missão, visão e valores." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --blue: #1e3a5f;
+      --blue-light: #2c5282;
+      --green: #059669;
+      --green-light: #10b981;
+      --white: #ffffff;
+      --gray-50: #f8fafc;
+      --gray-100: #f1f5f9;
+      --gray-600: #475569;
+      --gray-800: #1e293b;
+      --shadow: 0 10px 30px rgba(30, 58, 95, 0.08);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: var(--white);
+      color: var(--gray-800);
+      line-height: 1.6;
+    }
+
+    h1, h2, h3, .display {
+      font-family: 'DM Serif Display', Georgia, serif;
+      line-height: 1.2;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--gray-100);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 72px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'DM Serif Display', Georgia, serif;
+      font-size: 1.5rem;
+      color: var(--blue);
+      text-decoration: none;
+    }
+
+    .logo-icon {
+      width: 36px;
+      height: 36px;
+      background: linear-gradient(135deg, var(--blue) 0%, var(--green) 100%);
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-weight: 700;
+      font-size: 1rem;
+      font-family: 'Inter', sans-serif;
+    }
+
+    .nav-desktop {
+      display: flex;
+      align-items: center;
+      gap: 32px;
+    }
+
+    .nav-desktop a {
+      color: var(--gray-600);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.95rem;
+      transition: color 0.2s;
+    }
+
+    .nav-desktop a:hover {
+      color: var(--blue);
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 12px 28px;
+      border-radius: 9999px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: all 0.2s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-light) 100%);
+      color: white;
+      box-shadow: 0 4px 14px rgba(30, 58, 95, 0.25);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(30, 58, 95, 0.3);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--blue);
+      border: 2px solid var(--blue);
+    }
+
+    .btn-outline:hover {
+      background: var(--blue);
+      color: white;
+    }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .menu-toggle span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background: var(--blue);
+      margin: 5px 0;
+      transition: 0.3s;
+    }
+
+    /* Hero */
+    .hero {
+      position: relative;
+      padding: 100px 0 80px;
+      background: linear-gradient(180deg, var(--gray-50) 0%, var(--white) 100%);
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: -20%;
+      right: -10%;
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, rgba(5, 150, 105, 0.08) 0%, transparent 70%);
+      border-radius: 50%;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      align-items: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-content h1 {
+      font-size: 3rem;
+      color: var(--blue);
+      margin-bottom: 24px;
+    }
+
+    .hero-content h1 span {
+      color: var(--green);
+    }
+
+    .hero-content p {
+      font-size: 1.15rem;
+      color: var(--gray-600);
+      margin-bottom: 32px;
+      max-width: 540px;
+    }
+
+    .hero-image {
+      position: relative;
+      border-radius: 24px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .hero-image img {
+      width: 100%;
+      height: 420px;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-badge {
+      position: absolute;
+      bottom: 24px;
+      left: 24px;
+      background: white;
+      padding: 16px 20px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .hero-badge-icon {
+      width: 44px;
+      height: 44px;
+      background: var(--green);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 1.25rem;
+    }
+
+    .hero-badge-text strong {
+      display: block;
+      color: var(--blue);
+      font-size: 1.1rem;
+    }
+
+    .hero-badge-text span {
+      color: var(--gray-600);
+      font-size: 0.85rem;
+    }
+
+    /* Section */
+    .section {
+      padding: 80px 0;
+    }
+
+    .section-header {
+      text-align: center;
+      max-width: 700px;
+      margin: 0 auto 56px;
+    }
+
+    .section-header h2 {
+      font-size: 2.25rem;
+      color: var(--blue);
+      margin-bottom: 16px;
+    }
+
+    .section-header p {
+      color: var(--gray-600);
+      font-size: 1.05rem;
+    }
+
+    .divider {
+      width: 60px;
+      height: 4px;
+      background: linear-gradient(90deg, var(--blue), var(--green));
+      border-radius: 2px;
+      margin: 0 auto 24px;
+    }
+
+    /* Story */
+    .story-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 48px;
+      align-items: start;
+    }
+
+    .story-card {
+      background: var(--gray-50);
+      border-radius: 20px;
+      padding: 32px;
+      border-left: 4px solid var(--green);
+    }
+
+    .story-card h3 {
+      font-size: 1.35rem;
+      color: var(--blue);
+      margin-bottom: 16px;
+    }
+
+    .story-card p {
+      color: var(--gray-600);
+      margin-bottom: 16px;
+    }
+
+    .story-card p:last-child {
+      margin-bottom: 0;
+    }
+
+    .story-image {
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+
+    .story-image img {
+      width: 100%;
+      height: 100%;
+      min-height: 360px;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Mission / Vision */
+    .mission-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+    }
+
+    .mission-card {
+      background: white;
+      border: 1px solid var(--gray-100);
+      border-radius: 20px;
+      padding: 32px;
+      text-align: center;
+      transition: all 0.3s;
+    }
+
+    .mission-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow);
+      border-color: transparent;
+    }
+
+    .mission-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      margin: 0 auto 20px;
+      font-size: 1.75rem;
+    }
+
+    .mission-card:nth-child(1) .mission-icon {
+      background: rgba(30, 58, 95, 0.1);
+      color: var(--blue);
+    }
+
+    .mission-card:nth-child(2) .mission-icon {
+      background: rgba(5, 150, 105, 0.1);
+      color: var(--green);
+    }
+
+    .mission-card:nth-child(3) .mission-icon {
+      background: linear-gradient(135deg, rgba(30, 58, 95, 0.1), rgba(5, 150, 105, 0.1));
+      color: var(--blue);
+    }
+
+    .mission-card h3 {
+      font-size: 1.35rem;
+      color: var(--blue);
+      margin-bottom: 12px;
+    }
+
+    .mission-card p {
+      color: var(--gray-600);
+      font-size: 0.95rem;
+    }
+
+    /* Values */
+    .values-list {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+      max-width: 800px;
+      margin: 0 auto;
+    }
+
+    .value-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 20px;
+      background: var(--gray-50);
+      border-radius: 16px;
+    }
+
+    .value-icon {
+      width: 40px;
+      height: 40px;
+      min-width: 40px;
+      border-radius: 10px;
+      background: var(--green);
+      color: white;
+      display: grid;
+      place-items: center;
+      font-size: 1.1rem;
+    }
+
+    .value-item h4 {
+      color: var(--blue);
+      margin-bottom: 4px;
+      font-size: 1.05rem;
+    }
+
+    .value-item p {
+      color: var(--gray-600);
+      font-size: 0.9rem;
+    }
+
+
+    /* CTA */
+    .cta {
+      background: linear-gradient(135deg, var(--blue) 0%, var(--blue-light) 100%);
+      color: white;
+      padding: 80px 0;
+      text-align: center;
+      border-radius: 0;
+    }
+
+    .cta h2 {
+      font-size: 2.25rem;
+      margin-bottom: 16px;
+    }
+
+    .cta p {
+      opacity: 0.9;
+      font-size: 1.1rem;
+      max-width: 560px;
+      margin: 0 auto 32px;
+    }
+
+    .cta .btn {
+      background: white;
+      color: var(--blue);
+    }
+
+    .cta .btn:hover {
+      background: var(--gray-50);
+    }
+
+    /* Footer */
+    .footer {
+      background: var(--blue);
+      color: white;
+      padding: 56px 0 24px;
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 40px;
+      margin-bottom: 40px;
+    }
+
+    .footer-brand .logo {
+      color: white;
+      margin-bottom: 16px;
+    }
+
+    .footer-brand p {
+      opacity: 0.8;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .footer-col h5 {
+      font-family: 'Inter', sans-serif;
+      font-weight: 600;
+      margin-bottom: 16px;
+      font-size: 1rem;
+    }
+
+    .footer-col a {
+      display: block;
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      margin-bottom: 10px;
+      font-size: 0.9rem;
+      transition: color 0.2s;
+    }
+
+    .footer-col a:hover {
+      color: white;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid rgba(255, 255, 255, 0.15);
+      padding-top: 24px;
+      text-align: center;
+      opacity: 0.7;
+      font-size: 0.85rem;
+    }
+
+    /* Mobile */
+    @media (max-width: 1024px) {
+      .hero-grid,
+      .story-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .mission-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+
+      .footer-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .nav-desktop {
+        display: none;
+      }
+
+      .menu-toggle {
+        display: block;
+      }
+
+      .hero {
+        padding: 60px 0 50px;
+      }
+
+      .hero-content h1 {
+        font-size: 2.25rem;
+      }
+
+      .hero-image img {
+        height: 280px;
+      }
+
+      .mission-grid,
+      .values-list,
+      .footer-grid {
+        grid-template-columns: 1fr;
+      }
+
+
+      .section {
+        padding: 60px 0;
+      }
+
+      .section-header h2,
+      .cta h2 {
+        font-size: 1.75rem;
+      }
+    }
+
+    .mobile-nav {
+      display: none;
+      position: absolute;
+      top: 72px;
+      left: 0;
+      right: 0;
+      background: white;
+      border-bottom: 1px solid var(--gray-100);
+      padding: 20px 24px;
+      flex-direction: column;
+      gap: 16px;
+      box-shadow: var(--shadow);
+    }
+
+    .mobile-nav.active {
+      display: flex;
+    }
+
+    .mobile-nav a {
+      color: var(--gray-800);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .mobile-nav .btn {
+      width: 100%;
+    }
+  </style>
+</head>
+<body>
+  <header class="header">
+    <div class="container header-inner">
+      <a href="jurisfree-landing.html" class="logo">
+        <span class="logo-icon">J</span>
+        JurisFree
+      </a>
+      <nav class="nav-desktop">
+        <a href="jurisfree-landing.html">Início</a>
+        <a href="jurisfree-aboutus.html">Sobre Nós</a>
+        <a href="jurisfree-landing.html#areas">Áreas de Atuação</a>
+        <a href="jurisfree-landing.html#como-funciona">Como Funciona</a>
+        <a href="jurisfree-landing.html#contato" class="btn btn-primary">Agendar Consulta</a>
+      </nav>
+      <button class="menu-toggle" aria-label="Abrir menu" onclick="toggleMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <nav class="mobile-nav" id="mobileNav">
+      <a href="jurisfree-landing.html">Início</a>
+      <a href="jurisfree-aboutus.html">Sobre Nós</a>
+      <a href="jurisfree-landing.html#areas">Áreas de Atuação</a>
+      <a href="jurisfree-landing.html#como-funciona">Como Funciona</a>
+      <a href="jurisfree-landing.html#contato" class="btn btn-primary">Agendar Consulta</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="container hero-grid">
+      <div class="hero-content">
+        <h1>Sobre o <span>JurisFree</span></h1>
+        <p>
+          Somos um projeto acadêmico desenvolvido por estudantes da Faculdade Módulo, da Universidade Cruzeiro do Sul. O JurisFree é uma plataforma de agendamento de consultas jurídicas gratuitas, criada para conectar pessoas de baixa renda a advogados voluntários.
+        </p>
+        <a href="#historia" class="btn btn-primary">Conheça nossa história</a>
+      </div>
+      <div class="hero-image">
+        <img src="images/about-hero.jpg" alt="Equipe de advogados voluntários em reunião" />
+        <div class="hero-badge">
+          <div class="hero-badge-icon">⚖</div>
+          <div class="hero-badge-text">
+            <strong>100% gratuito</strong>
+            <span>Atendimento para quem precisa</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="historia">
+    <div class="container">
+      <div class="section-header">
+        <div class="divider"></div>
+        <h2>Nossa História</h2>
+        <p>
+          O JurisFree nasceu em sala de aula, na Faculdade Módulo (Cruzeiro do Sul), a partir de uma pergunta simples: como a tecnologia pode aproximar quem precisa de orientação jurídica de quem pode oferecê-la?
+        </p>
+      </div>
+      <div class="story-grid">
+        <div class="story-card">
+          <h3>O problema que enfrentamos</h3>
+          <p>
+            Milhões de brasileiros não têm condições de arcar com honorários advocatícios e, muitas vezes, desconhecem seus direitos ou têm medo de buscar ajuda. A Defensoria Pública, embora essencial, está sobrecarregada, e o atendimento voluntário ainda é pouco organizado digitalmente.
+          </p>
+          <p>
+            Diante desse cenário, muitas pessoas desistem de reivindicar seus direitos por falta de informação, tempo ou acesso. Foi esse problema real que escolhemos enfrentar como tema do nosso projeto integrador na faculdade.
+          </p>
+        </div>
+        <div class="story-image">
+          <img src="images/historia-problema.jpg" alt="Advogado voluntário conversando com cliente em escritório comunitário" />
+        </div>
+      </div>
+      <div class="story-grid" style="margin-top: 48px;">
+        <div class="story-image">
+          <img src="images/historia-projeto.jpg" alt="Pessoas em reunião de planejamento de projeto social" />
+        </div>
+        <div class="story-card" style="border-left-color: var(--blue);">
+          <h3>Por que criamos o JurisFree</h3>
+          <p>
+            O JurisFree é um sistema acadêmico desenvolvido por alunos da Faculdade Módulo, do Cruzeiro do Sul, com o objetivo de organizar e simplificar o atendimento jurídico voluntário. A plataforma permite que pessoas de baixa renda agendem consultas gratuitas com advogados dispostos a ajudar, de forma segura, acolhedora e sem burocracia.
+          </p>
+          <p>
+            Mais do que uma entrega de curso, o projeto é um exercício prático de como a tecnologia pode ser aliada da inclusão social, unindo design simples, agendamento inteligente e uma rede de profissionais comprometidos com o acesso à justiça.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" style="background: var(--gray-50);">
+    <div class="container">
+      <div class="section-header">
+        <div class="divider"></div>
+        <h2>Missão, Visão e Propósito</h2>
+        <p>
+          Nossos princípios norteiam cada decisão que tomamos e cada funcionalidade que construímos.
+        </p>
+      </div>
+      <div class="mission-grid">
+        <div class="mission-card">
+          <div class="mission-icon">🎯</div>
+          <h3>Missão</h3>
+          <p>
+            Democratizar o acesso à justiça no Brasil, conectando pessoas em situação de vulnerabilidade a advogados voluntários por meio de uma plataforma digital simples, segura e gratuita.
+          </p>
+        </div>
+        <div class="mission-card">
+          <div class="mission-icon">🔭</div>
+          <h3>Visão</h3>
+          <p>
+            Ser a principal ponte entre cidadãos de baixa renda e profissionais do Direito dispostos a doar tempo e conhecimento, tornando o atendimento jurídico voluntário acessível em todo o país.
+          </p>
+        </div>
+        <div class="mission-card">
+          <div class="mission-icon">💚</div>
+          <h3>Propósito</h3>
+          <p>
+            Existimos porque acreditamos que ninguém deve desistir de seus direitos por falta de recursos. Queremos que cada pessoa se sinta ouvida, orientada e protegida.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="section-header">
+        <div class="divider"></div>
+        <h2>Nossos Valores</h2>
+        <p>
+          Princípios que carregamos em cada atendimento, decisão e interação com nossos usuários.
+        </p>
+      </div>
+      <div class="values-list">
+        <div class="value-item">
+          <div class="value-icon">🤝</div>
+          <div>
+            <h4>Empatia</h4>
+            <p>Ouvimos cada história com respeito e acolhimento, sem julgamentos.</p>
+          </div>
+        </div>
+        <div class="value-item">
+          <div class="value-icon">🔒</div>
+          <div>
+            <h4>Segurança</h4>
+            <p>Protegemos dados e garantimos sigilo absoluto das informações.</p>
+          </div>
+        </div>
+        <div class="value-item">
+          <div class="value-icon">⚖</div>
+          <div>
+            <h4>Equidade</h4>
+            <p>Trabalhamos para que todos tenham as mesmas oportunidades de acesso à justiça.</p>
+          </div>
+        </div>
+        <div class="value-item">
+          <div class="value-icon">🌱</div>
+          <div>
+            <h4>Impacto Social</h4>
+            <p>Cada consulta agendada é uma oportunidade de transformar uma vida.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <section class="cta">
+    <div class="container">
+      <h2>Faça parte dessa rede de apoio</h2>
+      <p>
+        Este é um projeto acadêmico da Faculdade Módulo (Cruzeiro do Sul). Explore a plataforma e veja como o agendamento de consultas gratuitas funcionaria na prática.
+      </p>
+      <a href="jurisfree-landing.html#contato" class="btn">Agendar Consulta Gratuita</a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <a href="jurisfree-landing.html" class="logo">
+            <span class="logo-icon">J</span>
+            JurisFree
+          </a>
+          <p>
+            Projeto acadêmico da Faculdade Módulo (Cruzeiro do Sul): agendamento gratuito de consultas jurídicas para pessoas de baixa renda.
+          </p>
+        </div>
+        <div class="footer-col">
+          <h5>Institucional</h5>
+          <a href="jurisfree-aboutus.html">Sobre Nós</a>
+          <a href="#historia">Nossa História</a>
+          <a href="#">Como Funciona</a>
+        </div>
+        <div class="footer-col">
+          <h5>Atendimento</h5>
+          <a href="#">Áreas de Atuação</a>
+          <a href="#">Advogados Voluntários</a>
+          <a href="#">Perguntas Frequentes</a>
+        </div>
+        <div class="footer-col">
+          <h5>Contato</h5>
+          <a href="mailto:contato@jurisfree.org">contato@jurisfree.org</a>
+          <a href="tel:08001234567">0800 123 4567</a>
+          <a href="#">São Paulo - SP</a>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        © 2026 JurisFree — Projeto acadêmico desenvolvido na Faculdade Módulo, Universidade Cruzeiro do Sul.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      const mobileNav = document.getElementById('mobileNav');
+      mobileNav.classList.toggle('active');
+    }
+
+    document.querySelectorAll('.mobile-nav a').forEach(link => {
+      link.addEventListener('click', () => {
+        document.getElementById('mobileNav').classList.remove('active');
+      });
+    });
+  </script>
+</body>
+</html>

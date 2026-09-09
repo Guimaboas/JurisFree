@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Agendar Consulta — JurisFree</title>
+  <meta name="description" content="Agende sua consulta jurídica gratuita no JurisFree. Preencha o formulário e um advogado voluntário entrará em contato em até 24 horas." />
+  <meta property="og:title" content="Agendar Consulta — JurisFree" />
+  <meta property="og:description" content="Agende sua consulta jurídica gratuita no JurisFree." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --brand: #0284c7;
+      --brand-dark: #026aa2;
+      --accent-green: #22c55e;
+      --slate-900: #0f172a;
+      --slate-800: #1e293b;
+      --slate-700: #334155;
+      --slate-600: #475569;
+      --slate-500: #64748b;
+      --slate-100: #f1f5f9;
+      --slate-50: #f8fafc;
+      --white: #ffffff;
+      --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+      --font-display: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--white);
+      color: var(--slate-700);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    img {
+      max-width: 100%;
+      display: block;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .container {
+      max-width: 1152px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* Header */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      border-bottom: 1px solid var(--slate-100);
+      background-color: rgba(255, 255, 255, 0.92);
+      backdrop-filter: blur(8px);
+    }
+
+    .header-inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 64px;
+    }
+
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-display);
+      font-size: 1.125rem;
+      font-weight: 800;
+      letter-spacing: -0.025em;
+      color: var(--slate-900);
+    }
+
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background-color: var(--brand);
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 0.875rem;
+      font-weight: 700;
+    }
+
+    .logo span.brand {
+      color: var(--brand);
+    }
+
+    .nav {
+      display: none;
+      align-items: center;
+      gap: 32px;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--slate-600);
+    }
+
+    .nav a:hover {
+      color: var(--brand);
+      transition: color 0.2s;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      transition: background-color 0.2s, transform 0.15s;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-primary {
+      background-color: var(--brand);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      background-color: var(--brand-dark);
+    }
+
+    .btn-white {
+      background-color: white;
+      color: var(--brand);
+    }
+
+    .btn-white:hover {
+      background-color: rgba(255, 255, 255, 0.9);
+    }
+
+    .btn-outline {
+      background-color: transparent;
+      border: 1px solid var(--slate-100);
+      color: var(--slate-700);
+    }
+
+    .btn-outline:hover {
+      background-color: var(--slate-50);
+    }
+
+    .menu-toggle {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 8px;
+    }
+
+    .menu-toggle span {
+      display: block;
+      width: 24px;
+      height: 2px;
+      background-color: var(--slate-800);
+      transition: transform 0.2s, opacity 0.2s;
+    }
+
+    .mobile-nav {
+      display: none;
+      flex-direction: column;
+      gap: 12px;
+      padding: 16px 24px 24px;
+      border-top: 1px solid var(--slate-100);
+      background-color: white;
+    }
+
+    .mobile-nav.active {
+      display: flex;
+    }
+
+    .mobile-nav a {
+      font-size: 0.9375rem;
+      font-weight: 500;
+      color: var(--slate-700);
+      padding: 8px 0;
+    }
+
+    @media (min-width: 768px) {
+      .nav {
+        display: flex;
+      }
+      .menu-toggle {
+        display: none;
+      }
+      .mobile-nav.active {
+        display: none;
+      }
+    }
+
+    /* Page heading */
+    .page-header {
+      padding-top: 48px;
+      padding-bottom: 32px;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      border-radius: 999px;
+      background-color: rgba(34, 197, 94, 0.1);
+      padding: 6px 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: #15803d;
+      border: 1px solid rgba(34, 197, 94, 0.2);
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background-color: var(--accent-green);
+    }
+
+    .page-header h1 {
+      font-family: var(--font-display);
+      font-size: 2rem;
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.025em;
+      color: var(--slate-900);
+      margin-top: 16px;
+    }
+
+    @media (min-width: 640px) {
+      .page-header h1 {
+        font-size: 2.5rem;
+      }
+    }
+
+    .page-header p {
+      margin-top: 12px;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+      color: var(--slate-600);
+    }
+
+    /* Booking layout */
+    .booking-section {
+      padding-bottom: 64px;
+    }
+
+    .booking-grid {
+      display: grid;
+      gap: 32px;
+      align-items: start;
+    }
+
+    @media (min-width: 1024px) {
+      .booking-grid {
+        grid-template-columns: 1.2fr 1fr;
+        gap: 48px;
+      }
+    }
+
+    /* Form */
+    .form-card {
+      border-radius: 24px;
+      border: 1px solid var(--slate-100);
+      background-color: white;
+      padding: 28px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.03);
+    }
+
+    @media (min-width: 640px) {
+      .form-card {
+        padding: 40px;
+      }
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--slate-800);
+    }
+
+    .form-label .required {
+      color: var(--brand);
+      margin-left: 2px;
+    }
+
+    .form-hint {
+      margin-top: 4px;
+      font-size: 0.75rem;
+      color: var(--slate-500);
+    }
+
+    .form-control {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid var(--slate-100);
+      background-color: var(--slate-50);
+      padding: 12px 14px;
+      font-family: var(--font-sans);
+      font-size: 0.9375rem;
+      color: var(--slate-800);
+      transition: border-color 0.2s, box-shadow 0.2s, background-color 0.2s;
+    }
+
+    .form-control::placeholder {
+      color: var(--slate-500);
+    }
+
+    .form-control:focus {
+      outline: none;
+      border-color: var(--brand);
+      background-color: white;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.1);
+    }
+
+    textarea.form-control {
+      min-height: 120px;
+      resize: vertical;
+    }
+
+    select.form-control {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2364748b' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 40px;
+    }
+
+    .form-row {
+      display: grid;
+      gap: 16px;
+    }
+
+    @media (min-width: 640px) {
+      .form-row {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .form-error {
+      display: none;
+      margin-top: 6px;
+      font-size: 0.75rem;
+      font-weight: 500;
+      color: #dc2626;
+    }
+
+    .form-group.has-error .form-control {
+      border-color: #fca5a5;
+      background-color: #fef2f2;
+    }
+
+    .form-group.has-error .form-error {
+      display: block;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 14px 24px;
+      font-size: 1rem;
+    }
+
+    .form-footer {
+      margin-top: 16px;
+      text-align: center;
+      font-size: 0.75rem;
+      color: var(--slate-500);
+    }
+
+    /* Success message */
+    .success-card {
+      display: none;
+      border-radius: 24px;
+      border: 1px solid rgba(34, 197, 94, 0.3);
+      background-color: rgba(34, 197, 94, 0.05);
+      padding: 40px;
+      text-align: center;
+    }
+
+    .success-card.active {
+      display: block;
+    }
+
+    .success-icon {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background-color: rgba(34, 197, 94, 0.15);
+      display: grid;
+      place-items: center;
+      margin: 0 auto 20px;
+      font-size: 1.75rem;
+    }
+
+    .success-card h2 {
+      font-family: var(--font-display);
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--slate-900);
+    }
+
+    .success-card p {
+      margin-top: 8px;
+      color: var(--slate-600);
+    }
+
+    /* Info sidebar */
+    .info-card {
+      border-radius: 24px;
+      border: 1px solid var(--slate-100);
+      background-color: var(--slate-50);
+      padding: 28px;
+    }
+
+    @media (min-width: 640px) {
+      .info-card {
+        padding: 32px;
+      }
+    }
+
+    .info-card h2 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--slate-900);
+      margin-bottom: 20px;
+    }
+
+    .info-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .info-list li {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+    }
+
+    .info-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background-color: rgba(2, 132, 199, 0.1);
+      display: grid;
+      place-items: center;
+      flex-shrink: 0;
+      font-size: 0.875rem;
+    }
+
+    .info-list h3 {
+      font-size: 0.9375rem;
+      font-weight: 700;
+      color: var(--slate-900);
+    }
+
+    .info-list p {
+      font-size: 0.875rem;
+      color: var(--slate-600);
+      margin-top: 2px;
+    }
+
+    .faq-card {
+      margin-top: 20px;
+      border-radius: 20px;
+      border: 1px solid var(--slate-100);
+      background-color: white;
+      padding: 24px;
+    }
+
+    .faq-card h3 {
+      font-family: var(--font-display);
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--slate-900);
+      margin-bottom: 16px;
+    }
+
+    .faq-item {
+      padding: 14px 0;
+      border-bottom: 1px solid var(--slate-100);
+    }
+
+    .faq-item:last-child {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+
+    .faq-item:first-child {
+      padding-top: 0;
+    }
+
+    .faq-question {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: var(--slate-800);
+      margin-bottom: 4px;
+    }
+
+    .faq-answer {
+      font-size: 0.8125rem;
+      color: var(--slate-600);
+    }
+
+    /* Trust banner */
+    .trust-banner {
+      margin-top: 48px;
+      border-radius: 20px;
+      background-color: var(--brand);
+      padding: 32px;
+      color: white;
+      text-align: center;
+    }
+
+    .trust-banner h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      font-weight: 700;
+    }
+
+    .trust-banner p {
+      margin-top: 6px;
+      font-size: 0.875rem;
+      color: rgba(255, 255, 255, 0.85);
+    }
+
+    /* Footer */
+    .footer {
+      border-top: 1px solid var(--slate-100);
+      padding: 32px 0;
+    }
+
+    .footer-inner {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      font-size: 0.875rem;
+      color: var(--slate-500);
+    }
+
+    @media (min-width: 640px) {
+      .footer-inner {
+        flex-direction: row;
+      }
+    }
+
+    .spinner {
+      display: inline-block;
+      width: 16px;
+      height: 16px;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      border-top-color: white;
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin-right: 8px;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="container">
+      <div class="header-inner">
+        <a href="jurisfree-landing.html" class="logo">
+          <span class="logo-icon">J</span>
+          <span>juris<span class="brand">free</span></span>
+        </a>
+        <nav class="nav">
+          <a href="jurisfree-landing.html#como-funciona">Como funciona</a>
+          <a href="jurisfree-aboutus.html">Sobre nós</a>
+          <a href="jurisfree-landing.html#areas">Áreas de atuação</a>
+          <a href="#duvidas">Perguntas</a>
+        </nav>
+        </nav>
+        <a href="jurisfree-agendamento.html" class="btn btn-primary">Agendar consulta</a>
+        <button class="menu-toggle" aria-label="Abrir menu" onclick="toggleMenu()">
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+      </div>
+    </div>
+    <div class="mobile-nav" id="mobileNav">
+      <a href="jurisfree-landing.html#como-funciona" onclick="toggleMenu()">Como funciona</a>
+      <a href="jurisfree-landing.html#areas" onclick="toggleMenu()">Áreas de atuação</a>
+      <a href="jurisfree-aboutus.html" onclick="toggleMenu()">Sobre nós</a>
+      <a href="jurisfree-agendamento.html" class="btn btn-primary" onclick="toggleMenu()">Agendar consulta</a>
+    </div>
+  </header>
+
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <span class="badge">
+          <span class="badge-dot"></span>
+          100% gratuito · Sem taxa de serviço
+        </span>
+        <h1>Agende sua consulta gratuita</h1>
+        <p>Preencha o formulário abaixo. Em até 24 horas um advogado voluntário analisará seu caso e entrará em contato.</p>
+      </div>
+    </section>
+
+    <section class="booking-section">
+      <div class="container">
+        <div class="booking-grid">
+          <div class="form-wrapper">
+            <form class="form-card" id="bookingForm" novalidate>
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="nome">Nome completo<span class="required">*</span></label>
+                  <input type="text" id="nome" name="nome" class="form-control" placeholder="Digite seu nome completo" required />
+                  <span class="form-error">Por favor, informe seu nome completo.</span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="email">E-mail<span class="required">*</span></label>
+                  <input type="email" id="email" name="email" class="form-control" placeholder="seu@email.com" required />
+                  <span class="form-error">Por favor, informe um e-mail válido.</span>
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="whatsapp">WhatsApp<span class="required">*</span></label>
+                  <input type="tel" id="whatsapp" name="whatsapp" class="form-control" placeholder="(11) 99999-9999" required />
+                  <span class="form-error">Por favor, informe seu WhatsApp.</span>
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="area">Área do direito<span class="required">*</span></label>
+                  <select id="area" name="area" class="form-control" required>
+                    <option value="" disabled selected>Selecione uma área</option>
+                    <option value="alimentos">Alimentos</option>
+                    <option value="consumidor">Consumidor</option>
+                    <option value="moradia">Moradia</option>
+                    <option value="trabalho">Trabalho</option>
+                    <option value="familia">Família</option>
+                    <option value="previdenciario">Previdenciário</option>
+                    <option value="outro">Outro</option>
+                  </select>
+                  <span class="form-error">Por favor, selecione uma área do direito.</span>
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="caso">Conte seu caso<span class="required">*</span></label>
+                <textarea id="caso" name="caso" class="form-control" placeholder="Descreva o que aconteceu de forma resumida. Quanto mais detalhes, melhor o advogado poderá se preparar." required></textarea>
+                <p class="form-hint">Mínimo de 20 caracteres. Não inclua dados sensíveis como senhas ou números de documentos.</p>
+                <span class="form-error">Por favor, descreva seu caso com pelo menos 20 caracteres.</span>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label class="form-label" for="data">Melhor data</label>
+                  <input type="date" id="data" name="data" class="form-control" />
+                </div>
+                <div class="form-group">
+                  <label class="form-label" for="horario">Melhor horário</label>
+                  <select id="horario" name="horario" class="form-control">
+                    <option value="" selected>Qualquer horário</option>
+                    <option value="manha">Manhã (8h–12h)</option>
+                    <option value="tarde">Tarde (12h–18h)</option>
+                    <option value="noite">Noite (18h–21h)</option>
+                  </select>
+                </div>
+              </div>
+
+              <button type="submit" class="btn btn-primary submit-btn" id="submitBtn">
+                Solicitar agendamento
+              </button>
+              <p class="form-footer">Ao enviar, você concorda em ser contactado por advogados voluntários do JurisFree.</p>
+            </form>
+
+            <div class="success-card" id="successCard">
+              <div class="success-icon">✓</div>
+              <h2>Solicitação enviada!</h2>
+              <p>Recebemos seu pedido. Um advogado voluntário entrará em contato em até 24 horas pelo e-mail ou WhatsApp informado.</p>
+              <a href="jurisfree-landing.html" class="btn btn-outline" style="margin-top: 20px;">Voltar para a página inicial</a>
+            </div>
+          </div>
+
+          <aside class="booking-info">
+            <div class="info-card">
+              <h2>O que acontece depois?</h2>
+              <ul class="info-list">
+                <li>
+                  <span class="info-icon">1</span>
+                  <div>
+                    <h3>Análise do caso</h3>
+                    <p>Um advogado voluntário revisa as informações em até 24 horas.</p>
+                  </div>
+                </li>
+                <li>
+                  <span class="info-icon">2</span>
+                  <div>
+                    <h3>Contato</h3>
+                    <p>Você recebe uma resposta por e-mail ou WhatsApp com orientações iniciais.</p>
+                  </div>
+                </li>
+                <li>
+                  <span class="info-icon">3</span>
+                  <div>
+                    <h3>Consulta</h3>
+                    <p>Se necessário, marcamos um horário por vídeo ou presencial, sem custo.</p>
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="faq-card">
+              <h3>Dúvidas comuns</h3>
+              <div class="faq-item">
+                <p class="faq-question">Preciso pagar alguma taxa?</p>
+                <p class="faq-answer">Não. O JurisFree é um projeto acadêmico sem fins lucrativos.</p>
+              </div>
+              <div class="faq-item">
+                <p class="faq-question">Quem são os advogados?</p>
+                <p class="faq-answer">Estudantes e profissionais voluntários supervisionados pela Faculdade Módulo — Cruzeiro do Sul.</p>
+              </div>
+              <div class="faq-item">
+                <p class="faq-question">Meus dados estão seguros?</p>
+                <p class="faq-answer">Sim. Usamos suas informações apenas para o atendimento e não as compartilhamos.</p>
+              </div>
+            </div>
+
+            <div class="trust-banner">
+              <h3>Projeto acadêmico</h3>
+              <p>Desenvolvido por alunos da Faculdade Módulo — Cruzeiro do Sul, com orientação de docentes e profissionais da área jurídica.</p>
+            </div>
+          </aside>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="logo">
+          <span class="logo-icon" style="width: 28px; height: 28px; font-size: 0.75rem;">J</span>
+          <span style="font-size: 1rem;">juris<span class="brand">free</span></span>
+        </div>
+        <p>Atendimento gratuito · Projeto sem fins lucrativos · © 2024</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      const nav = document.getElementById('mobileNav');
+      nav.classList.toggle('active');
+    }
+
+    const form = document.getElementById('bookingForm');
+    const successCard = document.getElementById('successCard');
+    const submitBtn = document.getElementById('submitBtn');
+
+    function showError(group, show) {
+      group.classList.toggle('has-error', show);
+    }
+
+    function validateEmail(email) {
+      return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    }
+
+    function validatePhone(phone) {
+      const digits = phone.replace(/\D/g, '');
+      return digits.length >= 10;
+    }
+
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const nome = form.nome.value.trim();
+      const email = form.email.value.trim();
+      const whatsapp = form.whatsapp.value.trim();
+      const area = form.area.value;
+      const caso = form.caso.value.trim();
+
+      let isValid = true;
+
+      const nomeGroup = form.nome.closest('.form-group');
+      showError(nomeGroup, nome.length < 3);
+      if (nome.length < 3) isValid = false;
+
+      const emailGroup = form.email.closest('.form-group');
+      showError(emailGroup, !validateEmail(email));
+      if (!validateEmail(email)) isValid = false;
+
+      const whatsappGroup = form.whatsapp.closest('.form-group');
+      showError(whatsappGroup, !validatePhone(whatsapp));
+      if (!validatePhone(whatsapp)) isValid = false;
+
+      const areaGroup = form.area.closest('.form-group');
+      showError(areaGroup, !area);
+      if (!area) isValid = false;
+
+      const casoGroup = form.caso.closest('.form-group');
+      showError(casoGroup, caso.length < 20);
+      if (caso.length < 20) isValid = false;
+
+      if (!isValid) return;
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="spinner"></span>Enviando...';
+
+      setTimeout(() => {
+        form.style.display = 'none';
+        successCard.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }, 1200);
+    });
+
+    form.querySelectorAll('.form-control').forEach(input => {
+      input.addEventListener('input', function () {
+        this.closest('.form-group').classList.remove('has-error');
+      });
+    });
+
+    const dataInput = document.getElementById('data');
+    const hoje = new Date().toISOString().split('T')[0];
+    dataInput.setAttribute('min', hoje);
+  </script>
+</body>
+</html>

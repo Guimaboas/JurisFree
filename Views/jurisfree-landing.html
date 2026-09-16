@@ -1,39 +1,32 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>JurisFree — Atendimento jurídico gratuito</title>
-  <meta name="description"
-    content="Agende consultas jurídicas gratuitas com advogados voluntários no JurisFree. Atendimento para pessoas de baixa renda, sem custo e sem burocracia." />
+  <meta name="description" content="Agende consultas jurídicas gratuitas com advogados voluntários no JurisFree. Atendimento para pessoas de baixa renda, sem custo e sem burocracia." />
   <meta property="og:title" content="JurisFree — Atendimento jurídico gratuito" />
-  <meta property="og:description"
-    content="Agende consultas jurídicas gratuitas com advogados voluntários no JurisFree." />
+  <meta property="og:description" content="Agende consultas jurídicas gratuitas com advogados voluntários no JurisFree." />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
-    rel="stylesheet" />
-  <link rel="stylesheet" href="style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
 </head>
-
-<body>
+<body class="page-landing">
 
   <header class="header">
     <div class="container">
       <div class="header-inner">
-        <a href="#" class="logo">
+        <a href="jurisfree-landing.html" class="logo">
           <span class="logo-icon">J</span>
           <span>juris<span class="brand">free</span></span>
         </a>
         <nav class="nav">
           <a href="#como-funciona">Como funciona</a>
-          <a href="jurisfree-aboutus.html">Sobre nós</a>
           <a href="#areas">Áreas de atuação</a>
-          <a href="#duvidas">Perguntas</a>
+          <a href="jurisfree-aboutus.html">Sobre nós</a>
         </nav>
         <a href="jurisfree-agendamento.html" class="btn btn-primary">Agendar consulta</a>
         <button class="menu-toggle" aria-label="Abrir menu" onclick="toggleMenu()">
@@ -46,8 +39,9 @@
     <div class="mobile-nav" id="mobileNav">
       <a href="#como-funciona" onclick="toggleMenu()">Como funciona</a>
       <a href="#areas" onclick="toggleMenu()">Áreas de atuação</a>
+      <a href="jurisfree-aboutus.html" onclick="toggleMenu()">Sobre nós</a>
       <a href="#duvidas" onclick="toggleMenu()">Perguntas</a>
-      <a href="#agendar" class="btn btn-primary" onclick="toggleMenu()">Agendar consulta</a>
+      <a href="jurisfree-agendamento.html" class="btn btn-primary" onclick="toggleMenu()">Agendar consulta</a>
     </div>
   </header>
 
@@ -61,31 +55,29 @@
               100% gratuito · Sem taxa de serviço
             </span>
             <h1>Atendimento jurídico gratuito para quem mais precisa.</h1>
-            <p>Agende sua consulta com advogados voluntários em poucos minutos. Sem custo, sem burocracia — só a ajuda
-              que você merece.</p>
+            <p>Agende sua consulta com advogados voluntários em poucos minutos. Sem custo, sem burocracia — só a ajuda que você merece.</p>
             <div class="hero-actions">
               <a href="jurisfree-agendamento.html" class="btn btn-primary">Agendar gratuitamente</a>
               <a href="#como-funciona" class="link-underline">Ver como funciona</a>
             </div>
             <div class="stats">
               <div>
-                <div class="value">0</div>
+                <div class="value">12.4k</div>
                 <div class="label">Consultas realizadas</div>
               </div>
               <div>
-                <div class="value">0</div>
+                <div class="value">180+</div>
                 <div class="label">Advogados parceiros</div>
               </div>
               <div>
-                <div class="value">R$ 0,00</div>
+                <div class="value">R$ 0</div>
                 <div class="label">Custo para você</div>
               </div>
             </div>
           </div>
 
           <div class="hero-image-wrapper">
-            <img src="images/jurisfree-hero.jpg"
-              alt="Advogado voluntário ouvindo atentamente um cliente em uma mesa com luz natural" class="hero-image" />
+            <img src="images/hero-landing.jpg" alt="Advogado voluntário ouvindo atentamente um cliente em uma mesa com luz natural" class="hero-image" />
             <div class="floating-card floating-card-left">
               <div class="lawyer-row">
                 <div class="avatar">MR</div>
@@ -140,14 +132,24 @@
         </div>
         <div class="areas-grid">
           <div class="area-card">
+            <div class="area-icon">🍽️</div>
+            <h3>Alimentos</h3>
+            <p>Benefícios e auxílios que você pode ter direito.</p>
+          </div>
+          <div class="area-card">
             <div class="area-icon">🛒</div>
-            <h3>Direito do Consumidor</h3>
-            <p>Problemas ou dúvidas envolvendo seus direitos como consumidor.</p>
+            <h3>Consumidor</h3>
+            <p>Cobranças indevidas, produtos e contratos.</p>
           </div>
           <div class="area-card">
             <div class="area-icon">🏠</div>
-            <h3>INSS</h3>
-            <p>Casos envolvendo a previdência.</p>
+            <h3>Moradia</h3>
+            <p>Despejos, aluguel e conflitos habitacionais.</p>
+          </div>
+          <div class="area-card">
+            <div class="area-icon">💼</div>
+            <h3>Trabalho</h3>
+            <p>Demissão, verbas e direitos do trabalhador.</p>
           </div>
         </div>
       </div>
@@ -161,7 +163,7 @@
           <h2>Sua causa merece cuidado. Comece hoje, de graça.</h2>
           <p>Leva menos de 2 minutos para agendar. Um advogado vai te responder em até 24 horas.</p>
           <div class="cta-actions">
-            <a href="#" class="btn btn-white">Agendar minha consulta</a>
+            <a href="jurisfree-agendamento.html" class="btn btn-white">Agendar minha consulta</a>
             <span class="cta-note">Sem cadastro de documentos</span>
           </div>
         </div>
@@ -173,8 +175,8 @@
     <div class="container">
       <div class="footer-inner">
         <div class="logo">
-          <span class="logo-icon" style="width: 28px; height: 28px; font-size: 0.75rem;">J</span>
-          <span style="font-size: 1rem;">juris<span class="brand">free</span></span>
+          <span class="logo-icon logo-icon-small">J</span>
+          <span class="logo-text-small">juris<span class="brand">free</span></span>
         </div>
         <p>Atendimento gratuito · Projeto sem fins lucrativos · © 2024</p>
       </div>
@@ -188,5 +190,4 @@
     }
   </script>
 </body>
-
 </html>

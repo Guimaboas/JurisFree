@@ -1858,3 +1858,21 @@ body.page-about{
   .page-about .menu-toggle { display: flex; }
   .page-about .hero { padding: 56px 0 50px; }
 }
+
+.page-about .hero-image {
+    aspect-ratio: auto;
+    width: auto;
+    height: auto;
+    border-radius: 0;
+    background: none;
+    object-fit: initial;
+}
+
+.page-about .hero-image > img {
+    width: 100%;
+    height: auto;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 16px;
+    background-color: var(--slate-100);
+}

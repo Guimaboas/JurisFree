@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Área do Administrador — JurisFree</title>
+  <meta name="description"
+    content="Acesso restrito para administradores do JurisFree, projeto acadêmico da Faculdade Módulo — Cruzeiro do Sul." />
+  <meta name="robots" content="noindex, nofollow" />
+  <meta property="og:title" content="Área do Administrador — JurisFree" />
+  <meta property="og:description" content="Acesso restrito para administradores do JurisFree." />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body class="page-admin">
+
+  <header class="header">
+    <div class="container">
+      <div class="header-inner">
+        <a href="jurisfree-landing.html" class="logo">
+          <span class="logo-icon">J</span>
+          <span>juris<span class="brand">free</span></span>
+          <span class="admin-tag">Admin</span>
+        </a>
+        <a href="jurisfree-landing.html" class="admin-back">← Voltar ao site</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="admin-main">
+    <div class="container">
+      <div class="admin-grid">
+
+        <!-- Painel institucional com a logo em destaque -->
+        <section class="admin-showcase" aria-label="Instituição parceira">
+          <div class="admin-logo-card">
+            <span class="admin-logo-label">Projeto acadêmico</span>
+            <img src="images/logo-modulo.png" alt="Módulo Centro Universitário" class="admin-logo-img" />
+            <span class="admin-logo-sub">Cruzeiro do Sul Educacional</span>
+          </div>
+
+          <h1>Painel administrativo do <span>JurisFree</span></h1>
+          <p>Área restrita para coordenadores, docentes e voluntários que organizam os atendimentos jurídicos gratuitos.
+          </p>
+
+          <ul class="admin-features">
+            <li>
+              <span class="admin-feature-icon blue">1</span>
+              <div>
+                <h3>Solicitações de agendamento</h3>
+                <p>Veja os pedidos enviados pelos cidadãos e distribua entre os voluntários.</p>
+              </div>
+            </li>
+            <li>
+              <span class="admin-feature-icon green">2</span>
+              <div>
+                <h3>Agenda dos advogados</h3>
+                <p>Acompanhe horários disponíveis e consultas confirmadas.</p>
+              </div>
+            </li>
+            <li>
+              <span class="admin-feature-icon blue">3</span>
+              <div>
+                <h3>Acompanhamento dos casos</h3>
+                <p>Registre o andamento de cada atendimento com segurança.</p>
+              </div>
+            </li>
+          </ul>
+        </section>
+
+        <!-- Cartão de login / registro -->
+        <section class="auth-card" aria-label="Acesso do administrador">
+          <div class="auth-tabs" role="tablist">
+            <button type="button" class="auth-tab active" role="tab" aria-selected="true"
+              data-tab="login">Entrar</button>
+            <button type="button" class="auth-tab" role="tab" aria-selected="false" data-tab="registro">Criar
+              conta</button>
+          </div>
+
+          <!-- LOGIN -->
+          <form class="auth-form active" id="loginForm" action="../Controllers/verificaLogin.php" method="post"
+            novalidate>
+            <div class="auth-heading">
+              <h2>Bem-vindo de volta</h2>
+              <p>Entre com seu e-mail institucional para acessar o painel.</p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="loginEmail">E-mail<span class="required">*</span></label>
+              <input type="email" id="loginEmail" name="email" class="form-control" placeholder="nome@modulo.edu.br"
+                autocomplete="email" required />
+              <span class="form-error">Informe um e-mail válido.</span>
+            </div>
+
+            <div class="form-group">
+              <div class="form-label-row">
+                <label class="form-label" for="loginSenha">Senha<span class="required">*</span></label>
+                <a href="#" class="auth-link" id="forgotLink">Esqueci minha senha</a>
+              </div>
+              <div class="password-field">
+                <input type="password" id="loginSenha" name="senha" class="form-control" placeholder="Digite sua senha"
+                  autocomplete="current-password" required />
+                <button type="button" class="password-toggle" aria-label="Mostrar senha">Mostrar</button>
+              </div>
+              <span class="form-error">Informe sua senha.</span>
+            </div>
+
+            <label class="checkbox-row">
+              <input type="checkbox" name="lembrar" />
+              <span>Manter conectado neste dispositivo</span>
+            </label>
+
+            <div class="auth-alert" id="loginAlert" role="status"></div>
+
+            <button type="submit" class="btn btn-primary auth-submit">Entrar no painel</button>
+
+            <p class="auth-switch">Ainda não tem acesso? <button type="button" class="auth-link"
+                data-go="registro">Criar conta</button></p>
+          </form>
+
+          <!-- REGISTRO -->
+          <form class="auth-form" id="registroForm" action="../Controllers/verificaRegistro.php" method="POST"
+            novalidate>
+            <div class="auth-heading">
+              <h2>Criar conta de administrador</h2>
+              <p>O cadastro precisa do código de convite fornecido pela coordenação do projeto.</p>
+            </div>
+
+            <div class="form-group">
+              <label class="form-label" for="regNome">Nome completo<span class="required">*</span></label>
+              <input type="text" id="regNome" name="nome" class="form-control" placeholder="Seu nome completo"
+                autocomplete="name" required />
+              <span class="form-error">Informe seu nome completo.</span>
+            </div>
+
+
+            <div class="form-group">
+              <label class="form-label" for="regEmail">E-mail institucional<span class="required">*</span></label>
+              <input type="email" id="regEmail" name="email" class="form-control" placeholder="nome@modulo.edu.br"
+                autocomplete="email" required />
+              <span class="form-error">Informe um e-mail válido.</span>
+            </div>
+
+
+            <div class="form-group">
+              <label class="form-label" for="regCodigo">Código de convite<span class="required">*</span></label>
+              <input type="text" id="regCodigo" name="codigo" class="form-control" placeholder="Ex.: JF-2026-XXXX"
+                required />
+              <p class="form-hint">Peça o código à coordenação do JurisFree.</p>
+              <span class="form-error">Informe o código de convite.</span>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="regSenha">Senha<span class="required">*</span></label>
+                <div class="password-field">
+                  <input type="password" id="regSenha" name="senha" class="form-control"
+                    placeholder="Mínimo 8 caracteres" autocomplete="new-password" required />
+                  <button type="button" class="password-toggle" aria-label="Mostrar senha">Mostrar</button>
+                </div>
+                <div class="password-strength" aria-hidden="true"><span id="strengthBar"></span></div>
+                <span class="form-error">A senha deve ter pelo menos 8 caracteres.</span>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="regConfirma">Confirmar senha<span class="required">*</span></label>
+                <div class="password-field">
+                  <input type="password" id="regConfirma" name="confirma" class="form-control"
+                    placeholder="Repita a senha" autocomplete="new-password" required />
+                  <button type="button" class="password-toggle" aria-label="Mostrar senha">Mostrar</button>
+                </div>
+                <span class="form-error">As senhas não coincidem.</span>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label class="checkbox-row">
+                <input type="checkbox" name="termos" id="regTermos" required />
+                <span>Concordo em tratar os dados dos atendidos com sigilo, conforme a LGPD.</span>
+              </label>
+              <span class="form-error">É necessário aceitar o termo de sigilo.</span>
+            </div>
+
+            <button type="submit" class="btn btn-primary auth-submit">Criar conta</button>
+
+            <p class="auth-switch">Já tem uma conta? <button type="button" class="auth-link"
+                data-go="login">Entrar</button></p>
+          </form>
+
+          <!-- Sucesso -->
+          <div class="auth-success" id="authSuccess">
+            <div class="auth-success-icon">✓</div>
+            <h2 id="successTitle">Tudo certo!</h2>
+            <p id="successText"></p>
+            <button type="button" class="btn btn-outline" id="successBack">Voltar</button>
+          </div>
+        </section>
+
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="logo">
+          <span class="logo-icon logo-icon-small">J</span>
+          <span class="logo-text-small">juris<span class="brand">free</span></span>
+        </div>
+        <p>Área restrita · Projeto acadêmico Faculdade Módulo — Cruzeiro do Sul</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    const tabs = document.querySelectorAll('.auth-tab');
+    const forms = { login: document.getElementById('loginForm'), registro: document.getElementById('registroForm') };
+    const tabsBar = document.querySelector('.auth-tabs');
+    const success = document.getElementById('authSuccess');
+
+    function showTab(name) {
+      tabs.forEach(t => {
+        const on = t.dataset.tab === name;
+        t.classList.toggle('active', on);
+        t.setAttribute('aria-selected', on);
+      });
+      Object.entries(forms).forEach(([key, f]) => f.classList.toggle('active', key === name));
+      success.classList.remove('active');
+      tabsBar.style.display = '';
+    }
+
+    tabs.forEach(t => t.addEventListener('click', () => showTab(t.dataset.tab)));
+    document.querySelectorAll('[data-go]').forEach(b => b.addEventListener('click', () => showTab(b.dataset.go)));
+    if (location.hash === '#registro') showTab('registro');
+
+    // Mostrar / ocultar senha
+    document.querySelectorAll('.password-toggle').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const input = btn.previousElementSibling;
+        const show = input.type === 'password';
+        input.type = show ? 'text' : 'password';
+        btn.textContent = show ? 'Ocultar' : 'Mostrar';
+        btn.setAttribute('aria-label', show ? 'Ocultar senha' : 'Mostrar senha');
+      });
+    });
+
+    // Força da senha
+    const regSenha = document.getElementById('regSenha');
+    const bar = document.getElementById('strengthBar');
+    regSenha.addEventListener('input', () => {
+      const v = regSenha.value;
+      let score = 0;
+      if (v.length >= 8) score++;
+      if (/[A-Z]/.test(v) && /[a-z]/.test(v)) score++;
+      if (/\d/.test(v)) score++;
+      if (/[^A-Za-z0-9]/.test(v)) score++;
+      bar.style.width = (score * 25) + '%';
+      bar.className = score <= 1 ? 'weak' : score <= 2 ? 'medium' : 'strong';
+    });
+
+    function setError(input, show) {
+      input.closest('.form-group').classList.toggle('has-error', show);
+      return !show;
+    }
+    const isEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
+
+    function loading(btn, text) {
+      btn.dataset.label = btn.textContent;
+      btn.disabled = true;
+      btn.innerHTML = '<span class="spinner"></span>' + text;
+    }
+    function reset(btn) {
+      btn.disabled = false;
+      btn.textContent = btn.dataset.label;
+    }
+
+    function showSuccess(title, text) {
+      Object.values(forms).forEach(f => f.classList.remove('active'));
+      tabsBar.style.display = 'none';
+      document.getElementById('successTitle').textContent = title;
+      document.getElementById('successText').textContent = text;
+      success.classList.add('active');
+    }
+    document.getElementById('successBack').addEventListener('click', () => showTab('login'));
+  
+    // Limpa erro ao digitar
+    document.querySelectorAll('.auth-form .form-control, .auth-form input[type=checkbox]').forEach(el => {
+      el.addEventListener('input', () => el.closest('.form-group')?.classList.remove('has-error'));
+      el.addEventListener('change', () => el.closest('.form-group')?.classList.remove('has-error'));
+    });
+  </script>
+</body>
+
+</html>

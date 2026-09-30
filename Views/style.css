@@ -513,7 +513,11 @@
       padding: 24px;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
+    .area-card-around{
+      display: flex;
+      justify-content: space-around;
 
+    }
     .area-card:hover {
       border-color: rgba(2, 132, 199, 0.3);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);

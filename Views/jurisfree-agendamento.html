@@ -1,19 +1,24 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Agendar Consulta — JurisFree</title>
-  <meta name="description" content="Agende sua consulta jurídica gratuita no JurisFree. Preencha o formulário e um advogado voluntário entrará em contato em até 24 horas." />
+  <meta name="description"
+    content="Agende sua consulta jurídica gratuita no JurisFree. Preencha o formulário e um advogado voluntário entrará em contato em até 24 horas." />
   <meta property="og:title" content="Agendar Consulta — JurisFree" />
   <meta property="og:description" content="Agende sua consulta jurídica gratuita no JurisFree." />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body class="page-booking">
 
   <header class="header">
@@ -52,7 +57,8 @@
           100% gratuito · Sem taxa de serviço
         </span>
         <h1>Agende sua consulta gratuita</h1>
-        <p>Preencha o formulário abaixo. Em até 24 horas um advogado voluntário analisará seu caso e entrará em contato.</p>
+        <p>Preencha o formulário abaixo. Em até 24 horas um advogado voluntário analisará seu caso e entrará em contato.
+        </p>
       </div>
     </section>
 
@@ -64,12 +70,14 @@
               <div class="form-row">
                 <div class="form-group">
                   <label class="form-label" for="nome">Nome completo<span class="required">*</span></label>
-                  <input type="text" id="nome" name="nome" class="form-control" placeholder="Digite seu nome completo" required />
+                  <input type="text" id="nome" name="nome" class="form-control" placeholder="Digite seu nome completo"
+                    required />
                   <span class="form-error">Por favor, informe seu nome completo.</span>
                 </div>
                 <div class="form-group">
                   <label class="form-label" for="email">E-mail<span class="required">*</span></label>
-                  <input type="email" id="email" name="email" class="form-control" placeholder="seu@email.com" required />
+                  <input type="email" id="email" name="email" class="form-control" placeholder="seu@email.com"
+                    required />
                   <span class="form-error">Por favor, informe um e-mail válido.</span>
                 </div>
               </div>
@@ -77,20 +85,16 @@
               <div class="form-row">
                 <div class="form-group">
                   <label class="form-label" for="whatsapp">WhatsApp<span class="required">*</span></label>
-                  <input type="tel" id="whatsapp" name="whatsapp" class="form-control" placeholder="(11) 99999-9999" required />
+                  <input type="tel" id="whatsapp" name="whatsapp" class="form-control" placeholder="(11) 99999-9999"
+                    required />
                   <span class="form-error">Por favor, informe seu WhatsApp.</span>
                 </div>
                 <div class="form-group">
                   <label class="form-label" for="area">Área do direito<span class="required">*</span></label>
                   <select id="area" name="area" class="form-control" required>
-                    <option value="" disabled selected>Selecione uma área</option>
-                    <option value="alimentos">Alimentos</option>
-                    <option value="consumidor">Consumidor</option>
-                    <option value="moradia">Moradia</option>
-                    <option value="trabalho">Trabalho</option>
-                    <option value="familia">Família</option>
-                    <option value="previdenciario">Previdenciário</option>
-                    <option value="outro">Outro</option>
+                    <option value="">Selecione uma área</option>
+                    <option value="previdenciario">Direito Previdenciário</option>
+                    <option value="consumidor">Direito do Consumidor</option>
                   </select>
                   <span class="form-error">Por favor, selecione uma área do direito.</span>
                 </div>
@@ -98,8 +102,11 @@
 
               <div class="form-group">
                 <label class="form-label" for="caso">Conte seu caso<span class="required">*</span></label>
-                <textarea id="caso" name="caso" class="form-control" placeholder="Descreva o que aconteceu de forma resumida. Quanto mais detalhes, melhor o advogado poderá se preparar." required></textarea>
-                <p class="form-hint">Mínimo de 20 caracteres. Não inclua dados sensíveis como senhas ou números de documentos.</p>
+                <textarea id="caso" name="caso" class="form-control"
+                  placeholder="Descreva o que aconteceu de forma resumida. Quanto mais detalhes, melhor o advogado poderá se preparar."
+                  required></textarea>
+                <p class="form-hint">Mínimo de 20 caracteres. Não inclua dados sensíveis como senhas ou números de
+                  documentos.</p>
                 <span class="form-error">Por favor, descreva seu caso com pelo menos 20 caracteres.</span>
               </div>
 
@@ -122,13 +129,15 @@
               <button type="submit" class="btn btn-primary submit-btn" id="submitBtn">
                 Solicitar agendamento
               </button>
-              <p class="form-footer">Ao enviar, você concorda em ser contactado por advogados voluntários do JurisFree.</p>
+              <p class="form-footer">Ao enviar, você concorda em ser contactado por advogados voluntários do JurisFree.
+              </p>
             </form>
 
             <div class="success-card" id="successCard">
               <div class="success-icon">✓</div>
               <h2>Solicitação enviada!</h2>
-              <p>Recebemos seu pedido. Um advogado voluntário entrará em contato em até 24 horas pelo e-mail ou WhatsApp informado.</p>
+              <p>Recebemos seu pedido. Um advogado voluntário entrará em contato em até 24 horas pelo e-mail ou WhatsApp
+                informado.</p>
               <a href="jurisfree-landing.html" class="btn btn-outline mt-20">Voltar para a página inicial</a>
             </div>
           </div>
@@ -169,17 +178,20 @@
               </div>
               <div class="faq-item">
                 <p class="faq-question">Quem são os advogados?</p>
-                <p class="faq-answer">Estudantes e profissionais voluntários supervisionados pela Faculdade Módulo — Cruzeiro do Sul.</p>
+                <p class="faq-answer">Estudantes e profissionais voluntários supervisionados pela Faculdade Módulo —
+                  Cruzeiro do Sul.</p>
               </div>
               <div class="faq-item">
                 <p class="faq-question">Meus dados estão seguros?</p>
-                <p class="faq-answer">Sim. Usamos suas informações apenas para o atendimento e não as compartilhamos.</p>
+                <p class="faq-answer">Sim. Usamos suas informações apenas para o atendimento e não as compartilhamos.
+                </p>
               </div>
             </div>
 
             <div class="trust-banner">
               <h3>Projeto acadêmico</h3>
-              <p>Desenvolvido por alunos da Faculdade Módulo — Cruzeiro do Sul, com orientação de docentes e profissionais da área jurídica.</p>
+              <p>Desenvolvido por alunos da Faculdade Módulo — Cruzeiro do Sul, com orientação de docentes e
+                profissionais da área jurídica.</p>
             </div>
           </aside>
         </div>
@@ -200,6 +212,15 @@
   </footer>
 
   <script>
+
+    const params = new URLSearchParams(window.location.search);
+    const area = params.get('area');
+
+    if (area) {
+        document.getElementById('area').value = area;
+    }
+
+
     function toggleMenu() {
       const nav = document.getElementById('mobileNav');
       nav.classList.toggle('active');
@@ -276,4 +297,5 @@
     dataInput.setAttribute('min', hoje);
   </script>
 </body>
+
 </html>

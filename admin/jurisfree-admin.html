@@ -12,12 +12,81 @@
   <meta property="og:description" content="Acesso restrito para administradores do JurisFree." />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary" />
+  
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
     href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap"
     rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
+  <style>
+    /* Alertas do painel administrativo JurisFree */
+.page-admin .auth-alert {
+  display: none;
+  margin-top: 16px;
+  width: 100%;
+}
+
+.page-admin .auth-alert.show {
+  display: block;
+}
+
+.page-admin .auth-alert .alert {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.page-admin .auth-alert .alert-danger {
+  color: #842029;
+  background-color: #f8d7da;
+  border-color: #f5c2c7;
+}
+
+.page-admin .auth-alert .alert-success {
+  color: #0f5132;
+  background-color: #d1e7dd;
+  border-color: #badbcc;
+}
+
+.page-admin .auth-alert .alert-warning {
+  color: #664d03;
+  background-color: #fff3cd;
+  border-color: #ffecb5;
+}
+
+.page-admin .auth-alert .alert-info {
+  color: #055160;
+  background-color: #cff4fc;
+  border-color: #b6effb;
+}
+
+.page-admin .auth-alert .aviso-texto {
+  flex: 1;
+}
+
+.page-admin .auth-alert .btn-close {
+  flex-shrink: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  font-size: 20px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.page-admin .auth-alert .btn-close::before {
+  content: "×";
+}
+  </style>
 </head>
 
 <body class="page-admin">
@@ -34,6 +103,31 @@
       </div>
     </div>
   </header>
+
+  <!-- Área global de avisos no topo da página -->
+  <div class="container" style="margin-top: 20px; width: 100%">
+    <div id="avisosGlobais" class="auth-alert" role="status"></div>
+  </div>
+
+  <!-- Templates ocultos para os alertas -->
+  <div id="avisos" style="display: none;" aria-hidden="true">
+    <template data-tipo="success">
+      <div class="alert alert-success alert-dismissible" role="alert"><span class="aviso-texto"></span><button
+          type="button" class="btn-close" aria-label="Fechar aviso"></button></div>
+    </template>
+    <template data-tipo="danger">
+      <div class="alert alert-danger alert-dismissible" role="alert"><span class="aviso-texto"></span><button
+          type="button" class="btn-close" aria-label="Fechar aviso"></button></div>
+    </template>
+    <template data-tipo="warning">
+      <div class="alert alert-warning alert-dismissible" role="alert"><span class="aviso-texto"></span><button
+          type="button" class="btn-close" aria-label="Fechar aviso"></button></div>
+    </template>
+    <template data-tipo="info">
+      <div class="alert alert-info alert-dismissible" role="alert"><span class="aviso-texto"></span><button
+          type="button" class="btn-close" aria-label="Fechar aviso"></button></div>
+    </template>
+  </div>
 
   <main class="admin-main">
     <div class="container">
@@ -60,7 +154,7 @@
               </div>
             </li>
             <li>
-              <span class="admin-feature-icon green">2</span>
+              <span class="admin-feature-icon">2</span>
               <div>
                 <h3>Agenda dos advogados</h3>
                 <p>Acompanhe horários disponíveis e consultas confirmadas.</p>
@@ -118,8 +212,6 @@
               <span>Manter conectado neste dispositivo</span>
             </label>
 
-            <div class="auth-alert" id="loginAlert" role="status"></div>
-
             <button type="submit" class="btn btn-primary auth-submit">Entrar no painel</button>
 
             <p class="auth-switch">Ainda não tem acesso? <button type="button" class="auth-link"
@@ -141,14 +233,12 @@
               <span class="form-error">Informe seu nome completo.</span>
             </div>
 
-
             <div class="form-group">
               <label class="form-label" for="regEmail">E-mail institucional<span class="required">*</span></label>
               <input type="email" id="regEmail" name="email" class="form-control" placeholder="nome@modulo.edu.br"
                 autocomplete="email" required />
               <span class="form-error">Informe um e-mail válido.</span>
             </div>
-
 
             <div class="form-group">
               <label class="form-label" for="regCodigo">Código de convite<span class="required">*</span></label>
@@ -220,6 +310,32 @@
   </footer>
 
   <script>
+    // Exibe alertas Bootstrap de forma global no topo da página.
+    function showAlert(tipo, mensagem) {
+      const host = document.getElementById('avisosGlobais');
+      const modelo = document.querySelector('#avisos template[data-tipo="' + tipo + '"]');
+      if (!host || !modelo) return;
+      host.replaceChildren();
+      const aviso = modelo.content.firstElementChild.cloneNode(true);
+      aviso.querySelector('.aviso-texto').textContent = mensagem;
+      aviso.querySelector('.btn-close').addEventListener('click', () => hideAlert());
+      host.appendChild(aviso);
+      host.className = 'auth-alert show';
+      host.style.display = 'block';
+      host.setAttribute('aria-live', 'polite');
+      
+      // Rrola suavemente a tela para o topo para destacar o erro
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function hideAlert() {
+      const alert = document.getElementById('avisosGlobais');
+      if (alert) {
+        alert.style.display = 'none';
+        alert.classList.remove('show');
+      }
+    }
+
     const tabs = document.querySelectorAll('.auth-tab');
     const forms = { login: document.getElementById('loginForm'), registro: document.getElementById('registroForm') };
     const tabsBar = document.querySelector('.auth-tabs');
@@ -254,31 +370,17 @@
     // Força da senha
     const regSenha = document.getElementById('regSenha');
     const bar = document.getElementById('strengthBar');
-    regSenha.addEventListener('input', () => {
-      const v = regSenha.value;
-      let score = 0;
-      if (v.length >= 8) score++;
-      if (/[A-Z]/.test(v) && /[a-z]/.test(v)) score++;
-      if (/\d/.test(v)) score++;
-      if (/[^A-Za-z0-9]/.test(v)) score++;
-      bar.style.width = (score * 25) + '%';
-      bar.className = score <= 1 ? 'weak' : score <= 2 ? 'medium' : 'strong';
-    });
-
-    function setError(input, show) {
-      input.closest('.form-group').classList.toggle('has-error', show);
-      return !show;
-    }
-    const isEmail = v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v);
-
-    function loading(btn, text) {
-      btn.dataset.label = btn.textContent;
-      btn.disabled = true;
-      btn.innerHTML = '<span class="spinner"></span>' + text;
-    }
-    function reset(btn) {
-      btn.disabled = false;
-      btn.textContent = btn.dataset.label;
+    if (regSenha && bar) {
+      regSenha.addEventListener('input', () => {
+        const v = regSenha.value;
+        let score = 0;
+        if (v.length >= 8) score++;
+        if (/[A-Z]/.test(v) && /[a-z]/.test(v)) score++;
+        if (/\d/.test(v)) score++;
+        if (/[^A-Za-z0-9]/.test(v)) score++;
+        bar.style.width = (score * 25) + '%';
+        bar.className = score <= 1 ? 'weak' : score <= 2 ? 'medium' : 'strong';
+      });
     }
 
     function showSuccess(title, text) {
@@ -288,13 +390,60 @@
       document.getElementById('successText').textContent = text;
       success.classList.add('active');
     }
-    document.getElementById('successBack').addEventListener('click', () => showTab('login'));
-  
-    // Limpa erro ao digitar
-    document.querySelectorAll('.auth-form .form-control, .auth-form input[type=checkbox]').forEach(el => {
-      el.addEventListener('input', () => el.closest('.form-group')?.classList.remove('has-error'));
-      el.addEventListener('change', () => el.closest('.form-group')?.classList.remove('has-error'));
+    
+    const btnSuccessBack = document.getElementById('successBack');
+    if (btnSuccessBack) {
+      btnSuccessBack.addEventListener('click', () => showTab('login'));
+    }
+
+    // Limpa avisos e erros ao interagir com os inputs
+    document.querySelectorAll('#loginForm input, #registroForm input').forEach((el) => {
+      el.addEventListener('input', () => {
+        el.closest('.form-group')?.classList.remove('has-error');
+        hideAlert();
+      });
+      el.addEventListener('change', () => {
+        el.closest('.form-group')?.classList.remove('has-error');
+        hideAlert();
+      });
     });
+
+    // Lê os códigos de erro enviados pelos controladores PHP via query string.
+    function mostrarRetornoPHP() {
+      const params = new URLSearchParams(window.location.search);
+
+      const errosRegistro = {
+        erroSenha: 'As senhas informadas não coincidem.',
+        erroTermos: 'É necessário aceitar o termo de sigilo para criar a conta.',
+        erro: 'Já existe uma conta cadastrada com esse e-mail.',
+        erroCod: 'O código de convite é inválido ou já foi utilizado.',
+        erroCadastro: 'Não foi possível concluir o cadastro. Tente novamente.'
+      };
+
+      const errosLogin = {
+        erroLogin: 'E-mail ou senha incorretos.',
+        erroSenhaLogin: 'A senha informada está incorreta.',
+        erroInativo: 'Esta conta está inativa. Entre em contato com a coordenação.'
+      };
+
+      for (const [codigo, mensagem] of Object.entries(errosRegistro)) {
+        if (params.has(codigo)) {
+          showTab('registro');
+          showAlert('danger', mensagem);
+          break;
+        }
+      }
+
+      for (const [codigo, mensagem] of Object.entries(errosLogin)) {
+        if (params.has(codigo)) {
+          showTab('login');
+          showAlert('danger', mensagem);
+          break;
+        }
+      }
+    }
+
+    mostrarRetornoPHP();
   </script>
 </body>
 

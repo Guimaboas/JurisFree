@@ -1,3 +1,4 @@
+<?php
 require_once __DIR__ . "/../Config/sessao.php";
 $usuarioPainel = exigeSessaoUsuario();
 $nomePainel = htmlspecialchars($usuarioPainel["nome"], ENT_QUOTES, "UTF-8");

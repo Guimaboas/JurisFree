@@ -32,6 +32,7 @@
           <a href="jurisfree-landing.html#como-funciona">Como funciona</a>
           <a href="jurisfree-landing.html#areas">Áreas de atuação</a>
           <a href="jurisfree-aboutus.html">Sobre nós</a>
+          <a href="jurisfree-verificarAgendamento.html">Verificar meu agendamento</a>
         </nav>
         <a href="jurisfree-agendamento.html" class="btn btn-primary">Agendar consulta</a>
         <button class="menu-toggle" aria-label="Abrir menu" onclick="toggleMenu()">
@@ -45,6 +46,7 @@
       <a href="jurisfree-landing.html#como-funciona" onclick="toggleMenu()">Como funciona</a>
       <a href="jurisfree-landing.html#areas" onclick="toggleMenu()">Áreas de atuação</a>
       <a href="jurisfree-aboutus.html" onclick="toggleMenu()">Sobre nós</a>
+      <a href="jurisfree-verificarAgendamento.html" onclick="toggleMenu()">Verificar meu agendamento</a>
       <a href="jurisfree-agendamento.html" class="btn btn-primary" onclick="toggleMenu()">Agendar consulta</a>
     </div>
   </header>
@@ -66,7 +68,8 @@
       <div class="container">
         <div class="booking-grid">
           <div class="form-wrapper">
-            <form class="form-card" id="bookingForm" novalidate>
+            <form class="form-card" id="bookingForm" action="../Controllers/verificaAgendamento.php" method="POST" novalidate>
+              <p class="form-server-feedback" id="serverFeedback" role="alert" hidden></p>
               <div class="form-row">
                 <div class="form-group">
                   <label class="form-label" for="nome">Nome completo<span class="required">*</span></label>
@@ -84,20 +87,28 @@
 
               <div class="form-row">
                 <div class="form-group">
+                  <label class="form-label" for="cpf">CPF<span class="required">*</span></label>
+                  <input type="text" id="cpf" name="cpf" class="form-control" placeholder="000.000.000-00"
+                    inputmode="numeric" autocomplete="off" maxlength="14" required />
+                  <span class="form-error">Por favor, informe um CPF válido.</span>
+                  <p class="form-hint">Usaremos o CPF para localizar suas solicitações e agendamentos.</p>
+                </div>
+                <div class="form-group">
                   <label class="form-label" for="whatsapp">WhatsApp<span class="required">*</span></label>
                   <input type="tel" id="whatsapp" name="whatsapp" class="form-control" placeholder="(11) 99999-9999"
                     required />
                   <span class="form-error">Por favor, informe seu WhatsApp.</span>
                 </div>
-                <div class="form-group">
-                  <label class="form-label" for="area">Área do direito<span class="required">*</span></label>
-                  <select id="area" name="area" class="form-control" required>
-                    <option value="">Selecione uma área</option>
-                    <option value="previdenciario">Direito Previdenciário</option>
-                    <option value="consumidor">Direito do Consumidor</option>
-                  </select>
-                  <span class="form-error">Por favor, selecione uma área do direito.</span>
-                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="form-label" for="area">Área do direito<span class="required">*</span></label>
+                <select id="area" name="area" class="form-control" required>
+                  <option value="">Selecione uma área</option>
+                  <option value="previdenciario">Direito Previdenciário</option>
+                  <option value="consumidor">Direito do Consumidor</option>
+                </select>
+                <span class="form-error">Por favor, selecione uma área do direito.</span>
               </div>
 
               <div class="form-group">
@@ -229,6 +240,24 @@
     const form = document.getElementById('bookingForm');
     const successCard = document.getElementById('successCard');
     const submitBtn = document.getElementById('submitBtn');
+    const serverFeedback = document.getElementById('serverFeedback');
+    const cpfInput = document.getElementById('cpf');
+
+    const resultado = params.get('enviado');
+    const erro = params.get('erro');
+    const mensagensErro = {
+      validacao: 'Confira os dados informados e tente enviar novamente.',
+      area: 'A área selecionada está indisponível no momento. Tente novamente mais tarde.',
+      salvar: 'Não foi possível registrar sua solicitação agora. Tente novamente mais tarde.'
+    };
+
+    if (resultado === '1') {
+      form.style.display = 'none';
+      successCard.classList.add('active');
+    } else if (mensagensErro[erro]) {
+      serverFeedback.textContent = mensagensErro[erro];
+      serverFeedback.hidden = false;
+    }
 
     function showError(group, show) {
       group.classList.toggle('has-error', show);
@@ -243,11 +272,29 @@
       return digits.length >= 10;
     }
 
+    function validateCpf(cpf) {
+      const digits = cpf.replace(/\D/g, '');
+      if (digits.length !== 11 || /^(\d)\1{10}$/.test(digits)) return false;
+
+      for (let digit = 9; digit <= 10; digit++) {
+        let sum = 0;
+        for (let index = 0; index < digit; index++) {
+          sum += Number(digits[index]) * (digit + 1 - index);
+        }
+        let result = (sum * 10) % 11;
+        if (result === 10) result = 0;
+        if (result !== Number(digits[digit])) return false;
+      }
+
+      return true;
+    }
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
 
       const nome = form.nome.value.trim();
       const email = form.email.value.trim();
+      const cpf = cpfInput.value.trim();
       const whatsapp = form.whatsapp.value.trim();
       const area = form.area.value;
       const caso = form.caso.value.trim();
@@ -261,6 +308,10 @@
       const emailGroup = form.email.closest('.form-group');
       showError(emailGroup, !validateEmail(email));
       if (!validateEmail(email)) isValid = false;
+
+      const cpfGroup = cpfInput.closest('.form-group');
+      showError(cpfGroup, !validateCpf(cpf));
+      if (!validateCpf(cpf)) isValid = false;
 
       const whatsappGroup = form.whatsapp.closest('.form-group');
       showError(whatsappGroup, !validatePhone(whatsapp));
@@ -278,12 +329,7 @@
 
       submitBtn.disabled = true;
       submitBtn.innerHTML = '<span class="spinner"></span>Enviando...';
-
-      setTimeout(() => {
-        form.style.display = 'none';
-        successCard.classList.add('active');
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-      }, 1200);
+      form.submit();
     });
 
     form.querySelectorAll('.form-control').forEach(input => {
@@ -293,8 +339,10 @@
     });
 
     const dataInput = document.getElementById('data');
-    const hoje = new Date().toISOString().split('T')[0];
-    dataInput.setAttribute('min', hoje);
+    const hoje = new Date();
+    hoje.setMinutes(hoje.getMinutes() - hoje.getTimezoneOffset());
+    const dataMinima = hoje.toISOString().split('T')[0];
+    dataInput.setAttribute('min', dataMinima);
   </script>
 </body>
 

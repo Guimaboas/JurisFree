@@ -17,7 +17,7 @@ function criaUsuario($Mysql, $nome, $email, $senha, $funcao, $id_codigo_convite)
     $sql = "INSERT INTO usuario
             (nome, email, senha, funcao, status, id_codigo_convite)
             VALUES
-            (?, ?, ?, ?, 1, ?)";
+            (?, ?, ?, ?, 'ativo', ?)";
 
     $stmt = mysqli_prepare($Mysql, $sql);
 

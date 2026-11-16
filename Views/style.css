@@ -931,6 +931,16 @@ body.page-booking{
       box-shadow: 0 4px 24px rgba(0, 0, 0, 0.03);
     }
 
+    .page-booking .form-server-feedback{
+      margin-bottom: 20px;
+      padding: 12px 14px;
+      border: 1px solid #f5c2c7;
+      border-radius: 10px;
+      background: #f8d7da;
+      color: #842029;
+      font-size: 0.875rem;
+    }
+
     @media (min-width: 640px){
       .page-booking .form-card{
         padding: 40px;
@@ -1879,4 +1889,108 @@ body.page-about{
     object-fit: cover;
     border-radius: 16px;
     background-color: var(--slate-100);
+}
+
+.appointment-lookup-section { padding-bottom: 64px; }
+.appointment-lookup-container { max-width: 760px; }
+.appointment-lookup-card {
+  padding: 28px;
+  border: 1px solid var(--slate-100);
+  border-radius: 20px;
+  background: var(--white);
+  box-shadow: 0 4px 24px rgba(15, 23, 42, .05);
+}
+.appointment-lookup-form { display: grid; gap: 12px; }
+.appointment-lookup-form[hidden],
+.appointment-lookup-results[hidden] { display: none; }
+.appointment-lookup-help,
+.appointment-lookup-privacy { color: var(--slate-500); font-size: .8125rem; }
+.appointment-lookup-button { width: 100%; min-height: 46px; }
+.appointment-lookup-message {
+  margin-top: 18px;
+  padding: 12px 14px;
+  border-radius: 10px;
+  background: rgba(2, 132, 199, .08);
+  color: var(--brand-dark);
+  font-size: .875rem;
+}
+.appointment-lookup-message.is-error {
+  background: #fef2f2;
+  color: #b91c1c;
+}
+.appointment-lookup-link {
+  justify-self: start;
+  padding: 4px 0;
+  border: 0;
+  background: transparent;
+  color: var(--brand);
+  font: inherit;
+  font-size: .8125rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+.appointment-lookup-results { margin-top: 24px; }
+.appointment-lookup-results-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 14px;
+}
+.appointment-lookup-results-heading h2 {
+  margin-top: 4px;
+  color: var(--slate-900);
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+}
+.appointment-result-card {
+  margin-top: 12px;
+  padding: 18px;
+  border: 1px solid var(--slate-100);
+  border-radius: 12px;
+  background: var(--slate-50);
+}
+.appointment-result-card h3 {
+  margin-bottom: 10px;
+  color: var(--slate-900);
+  font-family: var(--font-display);
+  font-size: 1rem;
+}
+.appointment-result-line,
+.appointment-result-pending,
+.appointment-lookup-empty {
+  margin-top: 6px;
+  color: var(--slate-600);
+  font-size: .875rem;
+}
+.appointment-result-status {
+  display: inline-flex;
+  margin-top: 12px;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: .6875rem;
+  font-weight: 700;
+}
+.appointment-result-status.is-scheduled {
+  background: rgba(34, 197, 94, .1);
+  color: #15803d;
+}
+.appointment-result-status.is-pending {
+  background: rgba(245, 158, 11, .12);
+  color: #b45309;
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .page-landing .nav,
+  .page-about .nav,
+  .page-booking .nav { display: none; }
+  .page-landing .menu-toggle,
+  .page-about .menu-toggle,
+  .page-booking .menu-toggle { display: flex; }
+  .page-landing .mobile-nav.active,
+  .page-about .mobile-nav.active,
+  .page-booking .mobile-nav.active { display: flex; }
+}
+@media (max-width: 520px) {
+  .appointment-lookup-card { padding: 20px; }
+  .appointment-lookup-results-heading { align-items: flex-start; flex-direction: column; }
 }

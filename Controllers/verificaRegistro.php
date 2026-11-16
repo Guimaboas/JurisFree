@@ -1,8 +1,9 @@
 <?php
 
-require_once("../Config/conecta.php");
-require_once("../Models/usuario.php");
-require_once("../Models/codigo_convite.php");
+require_once __DIR__ . "/../Config/conecta.php";
+require_once __DIR__ . "/../Config/sessao.php";
+require_once __DIR__ . "/../Models/usuario.php";
+require_once __DIR__ . "/../Models/codigo_convite.php";
 
 $nome = $_POST["nome"];
 $email = $_POST["email"];
@@ -56,10 +57,12 @@ try {
         throw new Exception("Erro ao utilizar código de convite.");
     }
 
-    mysqli_commit($Mysql);
+    $usuarioSession = selecionaUsuarioPorEmail($Mysql, $email);
+    if (!$usuarioSession || !usuarioEstaAtivo($usuarioSession)) {
+        throw new Exception("Não foi possível iniciar a sessão do usuário cadastrado.");
+    }
 
-    header("Location: ../index.php");
-    exit;
+    mysqli_commit($Mysql);
 
 } catch (Exception $e) {
 
@@ -68,5 +71,9 @@ try {
     header("Location: ../admin/jurisfree-admin.html?erroCadastro=1");
     exit;
 }
+
+autenticaSessaoUsuario($usuarioSession);
+header("Location: ../admin/jurisfree-dashboard.php");
+exit;
 
 ?>

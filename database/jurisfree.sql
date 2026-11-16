@@ -73,6 +73,26 @@ CREATE TABLE cliente (
 CREATE INDEX idx_cliente_nome ON cliente(nome);
 CREATE INDEX idx_cliente_email ON cliente(email);
 
+-- CÓDIGOS TEMPORÁRIOS PARA CONSULTA DOS AGENDAMENTOS PELO CLIENTE
+CREATE TABLE codigo_consulta_agendamento (
+    id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+    id_cliente INT UNSIGNED NOT NULL,
+    codigo_hash VARCHAR(255) NOT NULL,
+    criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    expira_em DATETIME NOT NULL,
+    tentativas TINYINT UNSIGNED NOT NULL DEFAULT 0,
+    utilizado_em DATETIME NULL,
+
+    CONSTRAINT fk_codigo_consulta_cliente
+        FOREIGN KEY (id_cliente)
+        REFERENCES cliente(id)
+        ON DELETE CASCADE
+        ON UPDATE CASCADE
+) ENGINE=InnoDB;
+
+CREATE INDEX idx_codigo_consulta_cliente_data
+    ON codigo_consulta_agendamento(id_cliente, criado_em);
+
 -- 4. ÁREAS JURÍDICAS
 
 CREATE TABLE area_juridica (
@@ -130,8 +150,11 @@ CREATE INDEX idx_disponibilidade_advogado
 CREATE TABLE solicitacao_atendimento (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     id_cliente INT UNSIGNED NOT NULL,
+    id_atendente INT NULL,
     id_area_juridica INT UNSIGNED NOT NULL,
     descricao TEXT NOT NULL,
+    data_desejada DATE NULL,
+    periodo_desejado ENUM('manha', 'tarde', 'noite') NULL,
     status ENUM(
         'pendente',
         'em_analise',
@@ -270,4 +293,3 @@ VALUES
      'Questões relacionadas ao INSS e benefícios previdenciários.'),
     ('Direito do Consumidor',
      'Questões relacionadas às relações de consumo e direitos do consumidor.');
-

@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Verificar meu agendamento — JurisFree</title>
+  <meta name="description" content="Consulte com segurança suas solicitações e agendamentos no JurisFree.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="page-booking">
+  <header class="header">
+    <div class="container">
+      <div class="header-inner">
+        <a href="jurisfree-landing.html" class="logo" aria-label="JurisFree - página inicial">
+          <span class="logo-icon">J</span>
+          <span>juris<span class="brand">free</span></span>
+        </a>
+        <nav class="nav">
+          <a href="jurisfree-landing.html#como-funciona">Como funciona</a>
+          <a href="jurisfree-landing.html#areas">Áreas de atuação</a>
+          <a href="jurisfree-aboutus.html">Sobre nós</a>
+          <a href="jurisfree-verificarAgendamento.html" aria-current="page">Verificar meu agendamento</a>
+        </nav>
+        <a href="jurisfree-agendamento.html" class="btn btn-primary">Agendar consulta</a>
+        <button class="menu-toggle" aria-label="Abrir menu" onclick="toggleMenu()">
+          <span></span><span></span><span></span>
+        </button>
+      </div>
+    </div>
+    <nav class="mobile-nav" id="mobileNav">
+      <a href="jurisfree-landing.html#como-funciona" onclick="toggleMenu()">Como funciona</a>
+      <a href="jurisfree-landing.html#areas" onclick="toggleMenu()">Áreas de atuação</a>
+      <a href="jurisfree-aboutus.html" onclick="toggleMenu()">Sobre nós</a>
+      <a href="jurisfree-verificarAgendamento.html" aria-current="page">Verificar meu agendamento</a>
+      <a href="jurisfree-agendamento.html" class="btn btn-primary" onclick="toggleMenu()">Agendar consulta</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="page-header">
+      <div class="container">
+        <span class="badge"><span class="badge-dot"></span>Consulta protegida</span>
+        <h1>Verificar meu agendamento</h1>
+        <p>Informe seu CPF e confirme sua identidade com o código enviado ao e-mail cadastrado.</p>
+      </div>
+    </section>
+
+    <section class="booking-section appointment-lookup-section">
+      <div class="container appointment-lookup-container">
+        <div class="appointment-lookup-card">
+          <form id="cpfForm" class="appointment-lookup-form">
+            <label class="form-label" for="cpfLookup">CPF cadastrado</label>
+            <input class="form-control" id="cpfLookup" name="cpf" type="text"
+              inputmode="numeric" autocomplete="off" maxlength="14"
+              placeholder="000.000.000-00" required>
+            <button class="btn btn-primary appointment-lookup-button" type="submit">Enviar código de verificação</button>
+          </form>
+
+          <form id="codeForm" class="appointment-lookup-form" hidden>
+            <label class="form-label" for="verificationCode">Código de 6 dígitos</label>
+            <p class="appointment-lookup-help">Se o CPF estiver cadastrado, o código será enviado ao e-mail associado. Ele expira em 10 minutos.</p>
+            <input class="form-control" id="verificationCode" name="codigo" type="text"
+              inputmode="numeric" autocomplete="one-time-code" maxlength="6"
+              pattern="[0-9]{6}" placeholder="000000" required>
+            <button class="btn btn-primary appointment-lookup-button" type="submit">Confirmar código</button>
+            <button class="appointment-lookup-link" id="changeCpf" type="button">Usar outro CPF</button>
+          </form>
+
+          <p class="appointment-lookup-message" id="lookupMessage" role="status" aria-live="polite" hidden></p>
+          <section class="appointment-lookup-results" id="lookupResults" aria-live="polite" hidden>
+            <div class="appointment-lookup-results-heading">
+              <div>
+                <span class="dashboard-eyebrow">Consulta concluída</span>
+                <h2>Suas solicitações</h2>
+              </div>
+              <button class="appointment-lookup-link" id="closeResults" type="button">Encerrar consulta</button>
+            </div>
+            <div id="appointmentList"></div>
+          </section>
+        </div>
+        <p class="appointment-lookup-privacy">Por segurança, os detalhes só são exibidos após a confirmação do código enviado ao e-mail cadastrado.</p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-inner">
+        <div class="logo">
+          <span class="logo-icon logo-icon-small">J</span>
+          <span class="logo-text-small">juris<span class="brand">free</span></span>
+        </div>
+        <p>Atendimento gratuito · Projeto sem fins lucrativos · © 2024</p>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function toggleMenu() {
+      document.getElementById("mobileNav").classList.toggle("active");
+    }
+
+    const cpfForm = document.getElementById("cpfForm");
+    const codeForm = document.getElementById("codeForm");
+    const cpfInput = document.getElementById("cpfLookup");
+    const codeInput = document.getElementById("verificationCode");
+    const lookupMessage = document.getElementById("lookupMessage");
+    const lookupResults = document.getElementById("lookupResults");
+    const appointmentList = document.getElementById("appointmentList");
+    const apiUrl = "../Controllers/consultaAgendamento.php";
+    const appointmentStatuses = {
+      agendado: "Agendado",
+      confirmado: "Confirmado",
+      realizado: "Realizado",
+      cancelado: "Cancelado",
+      nao_compareceu: "Não compareceu"
+    };
+    const requestStatuses = {
+      pendente: "Pendente",
+      em_analise: "Em análise",
+      agendado: "Agendado",
+      em_atendimento: "Em atendimento",
+      concluido: "Concluído",
+      cancelado: "Cancelado"
+    };
+    const periods = {
+      manha: "Manhã",
+      tarde: "Tarde",
+      noite: "Noite"
+    };
+
+    async function sendRequest(payload) {
+      const response = await fetch(apiUrl, {
+        method: "POST",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      const result = await response.json();
+      if (!response.ok && result.ok !== false) {
+        throw new Error("Não foi possível concluir a consulta. Tente novamente.");
+      }
+      return result;
+    }
+
+    function showMessage(message, isError) {
+      lookupMessage.textContent = message;
+      lookupMessage.classList.toggle("is-error", Boolean(isError));
+      lookupMessage.hidden = false;
+    }
+
+    function appendText(parent, tag, className, text) {
+      const element = document.createElement(tag);
+      if (className) element.className = className;
+      element.textContent = text;
+      parent.appendChild(element);
+      return element;
+    }
+
+    function formatDate(dateString) {
+      const date = new Date(dateString.replace(" ", "T"));
+      if (Number.isNaN(date.getTime())) return dateString;
+      return new Intl.DateTimeFormat("pt-BR", {
+        dateStyle: "long",
+        timeStyle: "short"
+      }).format(date);
+    }
+
+    function renderAppointments(appointments) {
+      appointmentList.replaceChildren();
+      if (!appointments.length) {
+        appendText(appointmentList, "p", "appointment-lookup-empty",
+          "Não encontramos solicitações vinculadas a este CPF.");
+        return;
+      }
+
+      appointments.forEach((appointment) => {
+        const card = document.createElement("article");
+        card.className = "appointment-result-card";
+        appendText(card, "h3", "", appointment.area);
+
+        if (appointment.data_hora) {
+          appendText(card, "p", "appointment-result-line",
+            "Data e horário: " + formatDate(appointment.data_hora));
+          appendText(card, "p", "appointment-result-line",
+            "Advogado: " + (appointment.advogado || "Ainda não designado"));
+          appendText(card, "span", "appointment-result-status is-scheduled",
+            appointmentStatuses[appointment.status_agendamento] || "Agendamento atualizado");
+        } else {
+          appendText(card, "p", "appointment-result-pending",
+            "Ainda não foi designado um advogado nem definido um horário para esta solicitação.");
+          if (appointment.data_desejada || appointment.periodo_desejado) {
+            const preferencia = [];
+            if (appointment.data_desejada) {
+              preferencia.push("Data desejada: " + new Intl.DateTimeFormat("pt-BR", {
+                dateStyle: "long",
+                timeZone: "UTC"
+              }).format(new Date(appointment.data_desejada + "T00:00:00Z")));
+            }
+            if (appointment.periodo_desejado) {
+              preferencia.push("Período desejado: " + (periods[appointment.periodo_desejado] || "Não informado"));
+            }
+            appendText(card, "p", "appointment-result-line", preferencia.join(" · "));
+          }
+          appendText(card, "span", "appointment-result-status is-pending",
+            requestStatuses[appointment.status_solicitacao] || "Em análise");
+        }
+
+        appointmentList.appendChild(card);
+      });
+    }
+
+    async function loadAppointments(showErrors = true) {
+      const result = await sendRequest({ acao: "consultar_agendamentos" });
+      if (!result.ok) {
+        if (showErrors && result.mensagem) showMessage(result.mensagem, true);
+        return false;
+      }
+
+      cpfForm.hidden = true;
+      codeForm.hidden = true;
+      lookupMessage.hidden = true;
+      lookupResults.hidden = false;
+      renderAppointments(result.agendamentos);
+      return true;
+    }
+
+    cpfForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const button = cpfForm.querySelector("button[type='submit']");
+      button.disabled = true;
+      lookupMessage.hidden = true;
+      try {
+        const result = await sendRequest({
+          acao: "solicitar_codigo",
+          cpf: cpfInput.value
+        });
+        if (!result.ok) {
+          showMessage(result.mensagem, true);
+          return;
+        }
+        codeForm.hidden = false;
+        showMessage(result.mensagem, false);
+        codeInput.focus();
+      } catch (error) {
+        showMessage(error.message || "Não foi possível solicitar o código.", true);
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+    codeForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const button = codeForm.querySelector("button[type='submit']");
+      button.disabled = true;
+      lookupMessage.hidden = true;
+      try {
+        const result = await sendRequest({
+          acao: "verificar_codigo",
+          cpf: cpfInput.value,
+          codigo: codeInput.value.trim()
+        });
+        if (!result.ok) {
+          showMessage(result.mensagem, true);
+          return;
+        }
+        await loadAppointments();
+      } catch (error) {
+        showMessage(error.message || "Não foi possível confirmar o código.", true);
+      } finally {
+        button.disabled = false;
+      }
+    });
+
+    document.getElementById("changeCpf").addEventListener("click", async () => {
+      try {
+        await sendRequest({ acao: "encerrar_consulta" });
+      } catch (error) {
+        showMessage(error.message || "Não foi possível encerrar a consulta.", true);
+        return;
+      }
+      codeForm.hidden = true;
+      lookupResults.hidden = true;
+      lookupMessage.hidden = true;
+      codeInput.value = "";
+      cpfForm.hidden = false;
+      cpfInput.focus();
+    });
+
+    document.getElementById("closeResults").addEventListener("click", async () => {
+      try {
+        await sendRequest({ acao: "encerrar_consulta" });
+        lookupResults.hidden = true;
+        cpfForm.hidden = false;
+        cpfInput.value = "";
+        codeInput.value = "";
+        codeForm.hidden = true;
+        showMessage("Consulta encerrada.", false);
+      } catch (error) {
+        showMessage(error.message || "Não foi possível encerrar a consulta.", true);
+      }
+    });
+
+    loadAppointments(false).catch((error) => {
+      showMessage(error.message || "Não foi possível carregar a consulta.", true);
+    });
+  </script>
+</body>
+</html>

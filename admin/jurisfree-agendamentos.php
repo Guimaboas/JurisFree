@@ -1,9 +1,64 @@
 <?php
 require_once __DIR__ . "/../Config/sessao.php";
 $usuarioPainel = exigeSessaoUsuario();
+require_once __DIR__ . "/../Config/conecta.php";
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+
 $nomePainel = htmlspecialchars($usuarioPainel["nome"], ENT_QUOTES, "UTF-8");
 $iniciaisPainel = htmlspecialchars(iniciaisUsuario($usuarioPainel["nome"]), ENT_QUOTES, "UTF-8");
 $funcaoPainel = htmlspecialchars(rotuloFuncaoUsuario($usuarioPainel["funcao"]), ENT_QUOTES, "UTF-8");
+$escape = static function ($valor) {
+    return htmlspecialchars((string) $valor, ENT_QUOTES, "UTF-8");
+};
+$rotulosStatus = [
+    "agendado" => ["Agendado", "scheduled"],
+    "confirmado" => ["Confirmado", "confirmed"],
+    "realizado" => ["Realizado", "completed"],
+    "cancelado" => ["Cancelado", "cancelled"],
+    "nao_compareceu" => ["Não compareceu", "absent"]
+];
+$agendamentos = [];
+$resumo = ["total" => 0, "futuros" => 0, "realizados" => 0];
+$erroConsulta = false;
+
+try {
+    $resultadoResumo = $Mysql->query(
+        "SELECT
+            COUNT(*) AS total,
+            COALESCE(SUM(data_hora >= NOW() AND status IN ('agendado', 'confirmado')), 0) AS futuros,
+            COALESCE(SUM(status = 'realizado'), 0) AS realizados
+         FROM agendamento"
+    );
+    $resumo = $resultadoResumo->fetch_assoc();
+
+    $resultadoAgendamentos = $Mysql->query(
+        "SELECT
+            ag.data_hora,
+            ag.status,
+            cliente.nome AS cliente,
+            area_juridica.nome AS area,
+            usuario.nome AS advogado
+         FROM agendamento AS ag
+         INNER JOIN solicitacao_atendimento AS sa
+             ON sa.id = ag.id_solicitacao
+         INNER JOIN cliente
+             ON cliente.id = sa.id_cliente
+         INNER JOIN area_juridica
+             ON area_juridica.id = sa.id_area_juridica
+         INNER JOIN advogado
+             ON advogado.id = ag.id_advogado
+         INNER JOIN usuario
+             ON usuario.id = advogado.id_usuario
+         ORDER BY ag.data_hora ASC, ag.id ASC"
+    );
+    while ($agendamento = $resultadoAgendamentos->fetch_assoc()) {
+        $agendamentos[] = $agendamento;
+    }
+} catch (mysqli_sql_exception $erro) {
+    error_log("Falha ao carregar agendamentos administrativos: " . $erro->getMessage());
+    http_response_code(500);
+    $erroConsulta = true;
+}
 ?>
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -40,12 +95,17 @@ $funcaoPainel = htmlspecialchars(rotuloFuncaoUsuario($usuarioPainel["funcao"]), 
         <a href="jurisfree-dashboard.php">
           <span aria-hidden="true">▦</span> Visão geral
         </a>
-        <a href="jurisfree-admin.html">
-          <span aria-hidden="true">♙</span> Administração
-        </a>
         <a class="active" href="jurisfree-agendamentos.php" aria-current="page">
           <span aria-hidden="true">▣</span> Agendamentos
         </a>
+        <a href="jurisfree-requisicoes.php">
+          <span aria-hidden="true">☷</span> Requisições
+        </a>
+        <?php if ($usuarioPainel["funcao"] === "advogado"): ?>
+          <a href="jurisfree-conclusao.php">
+            <span aria-hidden="true">✓</span> Meus agendamentos
+          </a>
+        <?php endif; ?>
       </nav>
       <a class="dashboard-back" href="../Views/jurisfree-landing.html">← Voltar ao site</a>
     </aside>
@@ -60,20 +120,24 @@ $funcaoPainel = htmlspecialchars(rotuloFuncaoUsuario($usuarioPainel["funcao"]), 
         <a href="../Views/jurisfree-agendamento.html" class="btn btn-primary dashboard-new-btn">+ Novo agendamento</a>
       </section>
 
+      <?php if ($erroConsulta): ?>
+        <p class="requests-alert error" role="alert">Não foi possível carregar os agendamentos do banco de dados.</p>
+      <?php else: ?>
       <section class="dashboard-summary" aria-label="Resumo dos agendamentos demonstrativos">
         <article class="summary-card">
-          <span class="summary-icon blue" aria-hidden="true">▣</span>
-          <div><strong>7</strong><span>Agendamentos na lista</span></div>
+          <span class="summary-icon blue" aria-hidden="true" style="font-size: 2em; display: flex; justify-content: center; align-items: center">▣</span>
+          <div><strong><?php echo (int) $resumo["total"]; ?></strong><span>Agendamentos na lista</span></div>
         </article>
         <article class="summary-card">
-          <span class="summary-icon green" aria-hidden="true">◷</span>
-          <div><strong>4</strong><span>Atendimentos futuros</span></div>
+          <span class="summary-icon green" aria-hidden="true" style="font-size: 2em; display: flex; justify-content: center; align-items: center">◷</span>
+          <div><strong><?php echo (int) $resumo["futuros"]; ?></strong><span>Atendimentos futuros</span></div>
         </article>
         <article class="summary-card">
-          <span class="summary-icon blue" aria-hidden="true">✓</span>
-          <div><strong>1</strong><span>Atendimento realizado</span></div>
+          <span class="summary-icon blue" aria-hidden="true" style="font-size: 2em; display: flex; justify-content: center; align-items: center">✓</span>
+          <div><strong><?php echo (int) $resumo["realizados"]; ?></strong><span>Atendimento realizado</span></div>
         </article>
       </section>
+      <?php endif; ?>
 
       <section class="dashboard-card appointments-card" aria-label="Lista de agendamentos">
         <div class="appointments-toolbar">
@@ -108,61 +172,28 @@ $funcaoPainel = htmlspecialchars(rotuloFuncaoUsuario($usuarioPainel["funcao"]), 
               </tr>
             </thead>
             <tbody id="appointmentRows">
-              <tr data-status="confirmado">
-                <td><strong>16 nov. 2026</strong><small>09:00</small></td>
-                <td>Maria da Silva</td>
-                <td>Direito Previdenciário</td>
-                <td>Dra. Camila Nunes</td>
-                <td><span class="appointment-status confirmed">Confirmado</span></td>
-              </tr>
-              <tr data-status="agendado">
-                <td><strong>17 nov. 2026</strong><small>14:00</small></td>
-                <td>João Pereira</td>
-                <td>Direito do Consumidor</td>
-                <td>Dr. Felipe Martins</td>
-                <td><span class="appointment-status scheduled">Agendado</span></td>
-              </tr>
-              <tr data-status="agendado">
-                <td><strong>18 nov. 2026</strong><small>10:00</small></td>
-                <td>Ana Oliveira</td>
-                <td>Direito Previdenciário</td>
-                <td>Dra. Camila Nunes</td>
-                <td><span class="appointment-status scheduled">Agendado</span></td>
-              </tr>
-              <tr data-status="confirmado">
-                <td><strong>19 nov. 2026</strong><small>11:30</small></td>
-                <td>Pedro Santos</td>
-                <td>Direito do Consumidor</td>
-                <td>Dra. Luiza Costa</td>
-                <td><span class="appointment-status confirmed">Confirmado</span></td>
-              </tr>
-              <tr data-status="realizado">
-                <td><strong>12 nov. 2026</strong><small>15:00</small></td>
-                <td>Beatriz Costa</td>
-                <td>Direito Previdenciário</td>
-                <td>Dr. Felipe Martins</td>
-                <td><span class="appointment-status completed">Realizado</span></td>
-              </tr>
-              <tr data-status="cancelado">
-                <td><strong>10 nov. 2026</strong><small>09:30</small></td>
-                <td>Carlos Souza</td>
-                <td>Direito do Consumidor</td>
-                <td>Dra. Luiza Costa</td>
-                <td><span class="appointment-status cancelled">Cancelado</span></td>
-              </tr>
-              <tr data-status="nao_compareceu">
-                <td><strong>09 nov. 2026</strong><small>10:30</small></td>
-                <td>Marina Rocha</td>
-                <td>Direito Previdenciário</td>
-                <td>Dra. Camila Nunes</td>
-                <td><span class="appointment-status absent">Não compareceu</span></td>
-              </tr>
+              <?php foreach ($agendamentos as $agendamento): ?>
+                <?php
+                  $status = $rotulosStatus[$agendamento["status"]]
+                      ?? [$agendamento["status"], "scheduled"];
+                  $dataHora = strtotime($agendamento["data_hora"]);
+                ?>
+                <tr data-status="<?php echo $escape($agendamento["status"]); ?>">
+                  <td>
+                    <strong><?php echo date("d/m/Y", $dataHora); ?></strong>
+                    <small><?php echo date("H:i", $dataHora); ?></small>
+                  </td>
+                  <td><?php echo $escape($agendamento["cliente"]); ?></td>
+                  <td><?php echo $escape($agendamento["area"]); ?></td>
+                  <td><?php echo $escape($agendamento["advogado"]); ?></td>
+                  <td><span class="appointment-status <?php echo $escape($status[1]); ?>"><?php echo $escape($status[0]); ?></span></td>
+                </tr>
+              <?php endforeach; ?>
             </tbody>
           </table>
-          <p class="appointments-empty" id="appointmentsEmpty" hidden>Nenhum agendamento encontrado.</p>
+          <p class="appointments-empty" id="appointmentsEmpty" <?php echo $agendamentos ? "hidden" : ""; ?>><?php echo $erroConsulta ? "Os agendamentos não estão disponíveis no momento." : "Nenhum agendamento cadastrado."; ?></p>
         </div>
       </section>
-      <p class="appointments-note">Os registros exibidos são demonstrativos. A estrutura segue as tabelas de clientes, solicitações, áreas jurídicas, advogados e agendamentos do banco; a integração com o banco será adicionada posteriormente.</p>
     </main>
   </div>
 

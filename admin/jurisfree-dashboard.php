@@ -40,12 +40,17 @@ $funcaoPainel = htmlspecialchars(rotuloFuncaoUsuario($usuarioPainel["funcao"]), 
         <a class="active" href="jurisfree-dashboard.php" aria-current="page">
           <span aria-hidden="true">▦</span> Visão geral
         </a>
-        <a href="jurisfree-admin.html">
-          <span aria-hidden="true">♙</span> Administração
-        </a>
         <a href="jurisfree-agendamentos.php">
           <span aria-hidden="true">▣</span> Agendamentos
         </a>
+        <a href="jurisfree-requisicoes.php">
+          <span aria-hidden="true">☷</span> Requisições
+        </a>
+        <?php if ($usuarioPainel["funcao"] === "advogado"): ?>
+          <a href="jurisfree-conclusao.php">
+            <span aria-hidden="true">✓</span> Meus agendamentos
+          </a>
+        <?php endif; ?>
       </nav>
       <a class="dashboard-back" href="../Views/jurisfree-landing.html">← Voltar ao site</a>
     </aside>
@@ -57,7 +62,7 @@ $funcaoPainel = htmlspecialchars(rotuloFuncaoUsuario($usuarioPainel["funcao"]), 
           <h1>Olá, <?php echo $nomePainel; ?></h1>
           <p>Acompanhe os atendimentos e organize os próximos encontros jurídicos.</p>
         </div>
-        <a href="../Views/jurisfree-agendamento.html" class="btn btn-primary dashboard-new-btn">+ Novo agendamento</a>
+        <a target="_blank" rel="noopener noreferrer"href="../Views/jurisfree-agendamento.html" class="btn btn-primary dashboard-new-btn">+ Novo agendamento</a>
       </section>
 
       <section class="dashboard-summary" aria-label="Resumo dos atendimentos">

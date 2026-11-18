@@ -1,6 +1,8 @@
 <?php
 
 require_once __DIR__ . "/../Config/sessao.php";
+require_once __DIR__ . "/../Models/codigo_acesso_agendamento.php";
+require_once __DIR__ . "/../Services/email.php";
 exigeSessaoUsuario();
 
 function redirecionaRequisicoes($resultado)
@@ -62,9 +64,15 @@ try {
     $transacaoIniciada = true;
 
     $stmtSolicitacao = $Mysql->prepare(
-        "SELECT status
+        "SELECT
+            solicitacao_atendimento.status,
+            solicitacao_atendimento.id_cliente,
+            cliente.nome AS cliente_nome,
+            cliente.email AS cliente_email
          FROM solicitacao_atendimento
-         WHERE id = ?
+         INNER JOIN cliente
+             ON cliente.id = solicitacao_atendimento.id_cliente
+         WHERE solicitacao_atendimento.id = ?
          FOR UPDATE"
     );
     $stmtSolicitacao->bind_param("i", $idSolicitacao);
@@ -136,6 +144,27 @@ try {
     $stmtCriarAgendamento->execute();
     $stmtCriarAgendamento->close();
 
+    $codigoAcesso = null;
+    $codigoExistente = selecionaCodigoAcessoAgendamento(
+        $Mysql,
+        (int) $solicitacao["id_cliente"]
+    );
+    if (!$codigoExistente) {
+        $codigoGerado = str_pad(
+            (string) random_int(0, 999999999999),
+            12,
+            "0",
+            STR_PAD_LEFT
+        );
+        if (salvaCodigoAcessoAgendamento(
+            $Mysql,
+            (int) $solicitacao["id_cliente"],
+            password_hash($codigoGerado, PASSWORD_DEFAULT)
+        )) {
+            $codigoAcesso = $codigoGerado;
+        }
+    }
+
     $stmtAtualizarSolicitacao = $Mysql->prepare(
         "UPDATE solicitacao_atendimento
          SET status = 'agendado'
@@ -165,6 +194,32 @@ try {
     redirecionaRequisicoes("salvar");
 }
 
-redirecionaRequisicoes("salvo");
+$resultadoEmail = "salvo";
+try {
+    $mensagemEmail = "Olá, " . $solicitacao["cliente_nome"] . "!\r\n\r\n"
+        . "Seu agendamento foi criado. Para consultar a situação atual das suas solicitações, "
+        . "acesse a página \"Verificar meu agendamento\" no site JurisFree e informe seu CPF ";
+    if ($codigoAcesso !== null) {
+        $mensagemEmail .= "e este código de acesso permanente:\r\n\r\n"
+            . $codigoAcesso . "\r\n\r\n"
+            . "Guarde este código: ele será o mesmo para todos os seus agendamentos.\r\n\r\n";
+    } else {
+        $mensagemEmail .= "e o código de acesso permanente enviado no seu primeiro agendamento. "
+            . "Esse código não foi alterado.\r\n\r\n";
+    }
+    $mensagemEmail .= "Atenciosamente,\r\nEquipe JurisFree";
+
+    enviarEmailJurisFree(
+        $solicitacao["cliente_email"],
+        $solicitacao["cliente_nome"],
+        "Agendamento criado - JurisFree",
+        $mensagemEmail
+    );
+} catch (Throwable $erro) {
+    error_log("Falha ao enviar código de acesso do cliente " . (int) $solicitacao["id_cliente"] . ": " . $erro->getMessage());
+    $resultadoEmail = "salvo_email";
+}
+
+redirecionaRequisicoes($resultadoEmail);
 
 ?>

@@ -16,7 +16,9 @@ $escape = static function ($valor) {
 };
 $mensagens = [
     "concluido" => ["Agendamento concluído e caso registrado.", false],
+    "concluido_email" => ["Agendamento concluído, mas não foi possível enviar o aviso por email. Verifique a configuração SMTP.", true],
     "cancelado" => ["Agendamento cancelado.", false],
+    "cancelado_email" => ["Agendamento cancelado, mas não foi possível enviar o aviso por email. Verifique a configuração SMTP.", true],
     "csrf" => ["Não foi possível validar o formulário. Atualize a página e tente novamente.", true],
     "dados" => ["Preencha os campos obrigatórios com textos válidos.", true],
     "indisponivel" => ["Este agendamento não está mais disponível para finalização.", true],
@@ -282,7 +284,7 @@ $agendamentosParaConcluir = array_values(array_filter(
       <input type="hidden" name="id_agendamento" data-modal-appointment-id>
       <div class="schedule-field">
         <label for="caseSummary">Descrição do caso</label>
-        <textarea id="caseSummary" name="descricao" maxlength="5000" required></textarea>
+        <textarea id="caseSummary" name="descricao" maxlength="5000"></textarea>
       </div>
       <div class="schedule-modal-actions">
         <button class="schedule-cancel" type="button" data-close-modal>Voltar</button>
@@ -312,7 +314,7 @@ $agendamentosParaConcluir = array_values(array_filter(
         <textarea id="cancellationReason" name="justificativa" maxlength="2000" required></textarea>
       </div>
       <div class="schedule-field">
-        <label for="cancellationComment">Comentário adicional (opcional)</label>
+        <label for="cancellationComment">Descrição adicional (opcional)</label>
         <textarea id="cancellationComment" name="comentario" maxlength="2000"></textarea>
       </div>
       <div class="schedule-modal-actions">

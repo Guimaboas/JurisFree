@@ -44,6 +44,7 @@ if (!is_array($dados)) {
 
 require_once __DIR__ . "/../Config/conecta.php";
 require_once __DIR__ . "/../Models/consulta_agendamento.php";
+require_once __DIR__ . "/../Models/codigo_acesso_agendamento.php";
 
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 $acao = $dados["acao"] ?? "";
@@ -77,94 +78,35 @@ function cpfConsultaValido($cpf)
     return true;
 }
 
-function respostaConsultaGenerica()
-{
-    return [
-        "ok" => true,
-        "mensagem" => "Se o CPF estiver cadastrado, enviaremos um código ao e-mail associado."
-    ];
-}
-
 try {
-    if ($acao === "solicitar_codigo") {
-        $cpf = preg_replace('/\D/', '', trim((string) ($dados["cpf"] ?? "")));
-        if (!cpfConsultaValido($cpf)) {
-            respondeJson(400, ["ok" => false, "mensagem" => "Informe um CPF válido."]);
-        }
-
-        $remetente = getenv("JURISFREE_MAIL_FROM");
-        if (!$remetente || !filter_var($remetente, FILTER_VALIDATE_EMAIL) || !function_exists("mail")) {
-            error_log("Consulta de agendamento indisponível: configure JURISFREE_MAIL_FROM e o envio de e-mail do PHP.");
-            respondeJson(503, [
-                "ok" => false,
-                "mensagem" => "A consulta por e-mail está temporariamente indisponível. Tente novamente mais tarde."
-            ]);
-        }
-
-        $cliente = consultaClientePorCpf($Mysql, $cpf);
-        if (!$cliente || !filter_var($cliente["email"], FILTER_VALIDATE_EMAIL)) {
-            unset($_SESSION["consulta_cliente_id"], $_SESSION["consulta_verificada_em"]);
-            respondeJson(202, respostaConsultaGenerica());
-        }
-
-        $idCliente = (int) $cliente["id"];
-        $ultimoCodigo = selecionaUltimoCodigoConsulta($Mysql, $idCliente);
-        $agora = time();
-        if (
-            contaCodigosConsultaRecentes($Mysql, $idCliente) >= 3
-            || ($ultimoCodigo && $agora - strtotime($ultimoCodigo["criado_em"]) < 60)
-        ) {
-            unset($_SESSION["consulta_cliente_id"], $_SESSION["consulta_verificada_em"]);
-            respondeJson(202, respostaConsultaGenerica());
-        }
-
-        $codigo = str_pad((string) random_int(0, 999999), 6, "0", STR_PAD_LEFT);
-        invalidaCodigosConsultaAtivos($Mysql, $idCliente);
-        $idCodigo = criaCodigoConsulta($Mysql, $idCliente, password_hash($codigo, PASSWORD_DEFAULT));
-        $assunto = "Código para consultar seus agendamentos - JurisFree";
-        $mensagem = "Seu código de verificação é: " . $codigo . "\r\n\r\n"
-            . "Ele expira em 10 minutos e pode ser usado uma única vez. "
-            . "Se você não solicitou esta consulta, ignore este e-mail.";
-        $cabecalhos = "From: JurisFree <" . $remetente . ">\r\n"
-            . "Content-Type: text/plain; charset=UTF-8\r\n"
-            . "X-Mailer: PHP/" . phpversion();
-
-        if (!mail($cliente["email"], $assunto, $mensagem, $cabecalhos)) {
-            invalidaCodigoConsulta($Mysql, $idCodigo);
-            error_log("Falha ao enviar código de consulta para o cliente ID " . $idCliente);
-            unset($_SESSION["consulta_cliente_id"], $_SESSION["consulta_verificada_em"]);
-            respondeJson(202, respostaConsultaGenerica());
-        }
-
-        unset($_SESSION["consulta_cliente_id"], $_SESSION["consulta_verificada_em"]);
-        respondeJson(202, respostaConsultaGenerica());
-    }
-
     if ($acao === "verificar_codigo") {
         $cpf = preg_replace('/\D/', '', trim((string) ($dados["cpf"] ?? "")));
         $codigo = trim((string) ($dados["codigo"] ?? ""));
-        if (!cpfConsultaValido($cpf) || !preg_match('/^\d{6}$/', $codigo)) {
+        if (!cpfConsultaValido($cpf) || !preg_match('/^\d{12}$/', $codigo)) {
             respondeJson(400, ["ok" => false, "mensagem" => "CPF ou código inválido ou expirado."]);
         }
 
         $cliente = consultaClientePorCpf($Mysql, $cpf);
-        $codigoAtivo = $cliente ? selecionaCodigoConsultaAtivo($Mysql, (int) $cliente["id"]) : null;
+        $idCliente = $cliente ? (int) $cliente["id"] : 0;
+        $codigoAcesso = $cliente ? selecionaCodigoAcessoAgendamento($Mysql, $idCliente) : null;
+        $bloqueado = $codigoAcesso
+            && $codigoAcesso["bloqueado_ate"]
+            && strtotime($codigoAcesso["bloqueado_ate"]) > time();
+
         if (
-            !$codigoAtivo
-            || strtotime($codigoAtivo["expira_em"]) <= time()
-            || (int) $codigoAtivo["tentativas"] >= 5
-            || !incrementaTentativasCodigoConsulta($Mysql, (int) $codigoAtivo["id"])
-            || !password_verify($codigo, $codigoAtivo["codigo_hash"])
+            !$codigoAcesso
+            || $bloqueado
+            || !password_verify($codigo, $codigoAcesso["codigo_hash"])
         ) {
+            if ($codigoAcesso && !$bloqueado) {
+                incrementaTentativasCodigoAcessoAgendamento($Mysql, $idCliente);
+            }
             respondeJson(400, ["ok" => false, "mensagem" => "CPF ou código inválido ou expirado."]);
         }
 
-        if (!utilizaCodigoConsulta($Mysql, (int) $codigoAtivo["id"])) {
-            respondeJson(400, ["ok" => false, "mensagem" => "CPF ou código inválido ou expirado."]);
-        }
-
+        limpaTentativasCodigoAcessoAgendamento($Mysql, $idCliente);
         session_regenerate_id(true);
-        $_SESSION["consulta_cliente_id"] = (int) $cliente["id"];
+        $_SESSION["consulta_cliente_id"] = $idCliente;
         $_SESSION["consulta_verificada_em"] = time();
     } elseif ($acao !== "consultar_agendamentos") {
         respondeJson(400, ["ok" => false, "mensagem" => "Ação inválida."]);

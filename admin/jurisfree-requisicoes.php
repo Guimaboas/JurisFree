@@ -22,7 +22,8 @@ $statusSolicitacao = [
 ];
 $resultadoMensagem = $_GET["resultado"] ?? "";
 $mensagens = [
-    "salvo" => ["Requisição transformada em agendamento.", false],
+    "salvo" => ["Agendamento criado e código enviado ao cliente por email.", false],
+    "salvo_email" => ["Agendamento criado, mas não foi possível enviar o email com o código. Verifique a configuração SMTP.", true],
     "horario" => ["Informe uma data e horário futuros válidos.", true],
     "advogado" => ["Selecione um advogado ativo.", true],
     "requisicao" => ["Esta requisição já foi atendida ou não está mais disponível.", true],

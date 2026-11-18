@@ -73,25 +73,23 @@ CREATE TABLE cliente (
 CREATE INDEX idx_cliente_nome ON cliente(nome);
 CREATE INDEX idx_cliente_email ON cliente(email);
 
--- CÓDIGOS TEMPORÁRIOS PARA CONSULTA DOS AGENDAMENTOS PELO CLIENTE
-CREATE TABLE codigo_consulta_agendamento (
+-- CÓDIGO DURÁVEL ENVIADO QUANDO UM AGENDAMENTO É CRIADO
+CREATE TABLE codigo_acesso_agendamento (
     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-    id_cliente INT UNSIGNED NOT NULL,
+    id_cliente INT UNSIGNED NOT NULL UNIQUE,
     codigo_hash VARCHAR(255) NOT NULL,
-    criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    expira_em DATETIME NOT NULL,
     tentativas TINYINT UNSIGNED NOT NULL DEFAULT 0,
-    utilizado_em DATETIME NULL,
+    bloqueado_ate DATETIME NULL,
+    criado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    atualizado_em DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_codigo_consulta_cliente
+    CONSTRAINT fk_codigo_acesso_cliente
         FOREIGN KEY (id_cliente)
         REFERENCES cliente(id)
         ON DELETE CASCADE
         ON UPDATE CASCADE
 ) ENGINE=InnoDB;
-
-CREATE INDEX idx_codigo_consulta_cliente_data
-    ON codigo_consulta_agendamento(id_cliente, criado_em);
 
 -- 4. ÁREAS JURÍDICAS
 

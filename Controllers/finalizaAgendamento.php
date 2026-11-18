@@ -53,13 +53,14 @@ $descricao = trim($descricao);
 $justificativa = trim($justificativa);
 $comentario = trim($comentario);
 if (
-    ($acao === "concluir" && ($descricao === "" || strlen($descricao) > 5000))
+    ($acao === "concluir" && strlen($descricao) > 5000)
     || ($acao === "cancelar" && ($justificativa === "" || strlen($justificativa) > 2000 || strlen($comentario) > 2000))
 ) {
     redirecionaFinalizacao("dados");
 }
 
 require_once __DIR__ . "/../Config/conecta.php";
+require_once __DIR__ . "/../Services/email.php";
 mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 $transacaoIniciada = false;
@@ -73,8 +74,14 @@ try {
             ag.id_solicitacao,
             ag.id_advogado,
             ag.data_hora,
-            ag.status
+            ag.status,
+            cliente.nome AS cliente_nome,
+            cliente.email AS cliente_email
          FROM agendamento AS ag
+         INNER JOIN solicitacao_atendimento AS sa
+             ON sa.id = ag.id_solicitacao
+         INNER JOIN cliente
+             ON cliente.id = sa.id_cliente
          INNER JOIN advogado
              ON advogado.id = ag.id_advogado
          WHERE ag.id = ?
@@ -170,5 +177,39 @@ try {
     redirecionaFinalizacao("salvar");
 }
 
-redirecionaFinalizacao($acao === "concluir" ? "concluido" : "cancelado");
+$resultadoFinalizacao = $acao === "concluir" ? "concluido" : "cancelado";
+$mensagemEmail = "";
+if ($acao === "concluir" && $descricao !== "") {
+    $mensagemEmail = "Olá, " . $agendamento["cliente_nome"] . "!\r\n\r\n"
+        . "Foram adicionadas novas informações sobre seu caso no JurisFree. "
+        . "Acesse a página \"Verificar meu agendamento\" e informe seu CPF e código de acesso "
+        . "para consultar a situação atual.\r\n\r\n"
+        . "Atenciosamente,\r\nEquipe JurisFree";
+} elseif ($acao === "cancelar") {
+    $mensagemEmail = "Olá, " . $agendamento["cliente_nome"] . "!\r\n\r\n"
+        . "Seu agendamento foi cancelado pelo advogado.\r\n\r\n"
+        . "Justificativa: " . $justificativa . "\r\n";
+    if ($comentario !== "") {
+        $mensagemEmail .= "\r\nDescrição adicional: " . $comentario . "\r\n";
+    }
+    $mensagemEmail .= "\r\nAtenciosamente,\r\nEquipe JurisFree";
+}
+
+if ($mensagemEmail !== "") {
+    try {
+        enviarEmailJurisFree(
+            $agendamento["cliente_email"],
+            $agendamento["cliente_nome"],
+            $acao === "concluir"
+                ? "Novas informações sobre seu caso - JurisFree"
+                : "Agendamento cancelado - JurisFree",
+            $mensagemEmail
+        );
+    } catch (Throwable $erro) {
+        error_log("Falha ao enviar aviso do agendamento " . (int) $idAgendamento . ": " . $erro->getMessage());
+        $resultadoFinalizacao .= "_email";
+    }
+}
+
+redirecionaFinalizacao($resultadoFinalizacao);
 ?>
